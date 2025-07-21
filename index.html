@@ -9,67 +9,123 @@
     <style>
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #f0f4f8;
-            background-image: linear-gradient(to top right, #f0f4f8, #d9e2ec);
+            background-color: #f8fafc; /* Slate-50 */
+            background-image: radial-gradient(circle at top left, #e0e7ff, #f3e8ff); /* Indigo-100 to Purple-100 */
         }
+
+        /* --- Main Card Styles --- */
+        .card {
+            background-color: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 32px 0 rgba(100, 116, 139, 0.15); /* Softer, larger shadow */
+        }
+
+        /* --- Quiz Option Styles --- */
         .quiz-option {
-            transition: all 0.2s ease-in-out;
+            transition: all 0.25s ease-in-out;
             cursor: pointer;
+            border: 2px solid transparent;
+            background-color: #f8fafc; /* Slate-50 */
         }
         .quiz-option:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            transform: translateY(-3px);
+            border-color: #a5b4fc; /* Indigo-300 */
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
         }
         .quiz-option.selected {
-            background-color: #E0E7FF; /* Indigo-100 */
-            border-color: #4f46e5; /* Indigo-600 */
-            box-shadow: 0 0 0 2px #4f46e5;
+            background-color: #e0e7ff; /* Indigo-100 */
+            border-color: #6366f1; /* Indigo-500 */
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
         }
         .quiz-option.correct {
-            background-color: #D1FAE5; /* Green-100 */
-            border-color: #059669; /* Green-600 */
+            background-color: #ecfdf5; /* Green-50 */
+            border-color: #10b981; /* Green-500 */
         }
         .quiz-option.incorrect {
-            background-color: #FEE2E2; /* Red-100 */
-            border-color: #DC2626; /* Red-600 */
+            background-color: #fff1f2; /* Rose-50 */
+            border-color: #f43f5e; /* Rose-500 */
         }
+        .status-icon {
+            width: 24px;
+            height: 24px;
+        }
+
+        /* --- Feedback Card Animation --- */
         .feedback-card {
             max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.5s ease-in-out, padding 0.5s ease-in-out, margin 0.5s ease-in-out;
+            overflow: hidden; /* Use hidden instead of auto for smoother transition */
+            transition: max-height 0.5s ease-in-out, padding 0.5s ease-in-out, margin 0.5s ease-in-out, opacity 0.5s ease-in-out;
+            opacity: 0;
         }
         .feedback-card.show {
-            max-height: 500px; /* Adjust as needed */
-            padding-top: 1rem;
-            padding-bottom: 1rem;
+            max-height: 800px; /* Increased for very long feedback */
+            padding-top: 1.5rem;
+            padding-bottom: 1.5rem;
             margin-top: 1.5rem;
+            opacity: 1;
         }
+
+        /* --- State for Answered Questions --- */
         .answered .quiz-option:not(.selected):not(.correct) {
             cursor: not-allowed;
             opacity: 0.6;
-            filter: grayscale(50%);
+            filter: grayscale(60%);
         }
-        .review-answer-correct {
-            color: #059669; /* Green-700 */
-            font-weight: 600;
+        .answered .quiz-option:hover {
+            transform: none; /* Disable hover movement after answering */
         }
-        .review-answer-incorrect {
-            color: #DC2626; /* Red-600 */
-            font-weight: 600;
-        }
+
+        /* --- Button Styles --- */
         .btn {
             transition: all 0.2s ease-in-out;
+            border-radius: 0.5rem; /* Slightly larger radius */
+            font-weight: 600; /* semibold */
+            box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
         }
         .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            transform: translateY(-2px) scale(1.02);
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -2px rgb(0 0 0 / 0.05);
+        }
+        .btn:active {
+            transform: translateY(-1px) scale(1.0);
+        }
+        .btn-primary {
+            background-image: linear-gradient(to right, #4f46e5, #7c3aed); /* Indigo-600 to Violet-600 */
+            color: white;
+        }
+        .btn-primary:hover {
+             background-image: linear-gradient(to right, #4338ca, #6d28d9); /* Darker variants */
+        }
+        .btn-secondary {
+            background-color: white;
+            color: #4338ca; /* Indigo-700 */
+            border: 1px solid #e0e7ff; /* Indigo-100 */
+        }
+        .btn-secondary:hover {
+            background-color: #f8fafc; /* Slate-50 */
+        }
+
+        /* --- Progress Bar --- */
+        #progress-container {
+            width: 100%;
+            background-color: #e5e7eb; /* Gray-200 */
+            border-radius: 9999px;
+            height: 12px;
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
+        }
+        #progress-bar {
+            background-image: linear-gradient(to right, #a5b4fc, #6366f1); /* Indigo-300 to Indigo-500 */
+            height: 100%;
+            border-radius: 9999px;
+            transition: width 0.4s ease-in-out;
         }
     </style>
 </head>
 <body class="text-slate-800">
 
     <div class="container mx-auto p-4 sm:p-6 lg:p-8 max-w-4xl">
-        <!-- Header -->
         <header id="main-header" class="text-center mb-8">
             <h1 class="text-3xl sm:text-4xl font-extrabold text-slate-900 flex items-center justify-center">
                 <span class="inline-block align-middle w-10 h-10 mr-3">
@@ -84,22 +140,25 @@
             <p class="text-slate-600 mt-2 text-lg">Test your knowledge and prepare for certification!</p>
         </header>
 
-        <!-- Quiz Container -->
-        <div id="quiz-container" class="bg-white p-6 sm:p-8 rounded-2xl shadow-xl">
-            <!-- This will be populated by JavaScript -->
-        </div>
-
-        <!-- Navigation and Progress -->
-        <div id="navigation-container" class="mt-8 flex items-center justify-between">
-            <button id="prev-btn" class="btn bg-white hover:bg-slate-200 text-slate-700 font-bold py-2 px-4 rounded-lg shadow-md disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none disabled:shadow-sm">Previous</button>
-            <div id="progress-indicator" class="text-sm font-medium text-slate-600">
-                Question <span id="current-q-span">1</span> of <span id="total-q-span">60</span>
+        <div id="quiz-container" class="card p-6 sm:p-8 rounded-2xl">
             </div>
-            <button id="next-btn" class="btn bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-lg shadow-md">Next</button>
+
+        <div id="navigation-container" class="mt-8 flex items-center justify-between gap-4">
+            <button id="prev-btn" class="btn btn-secondary py-2 px-4 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none disabled:shadow-sm">Previous</button>
+            
+            <div class="flex-grow text-center">
+                <div id="progress-container">
+                    <div id="progress-bar" style="width: 0%;"></div>
+                </div>
+                <div id="progress-indicator" class="text-sm font-medium text-slate-600 mt-2">
+                    Question <span id="current-q-span">1</span> of <span id="total-q-span">60</span>
+                </div>
+            </div>
+            
+            <button id="next-btn" class="btn btn-primary py-2 px-4">Next</button>
         </div>
 
-        <!-- Results Screen -->
-        <div id="results-container" class="hidden text-center bg-white p-8 rounded-2xl shadow-xl">
+        <div id="results-container" class="hidden text-center card p-8 rounded-2xl">
             <h2 class="text-3xl font-bold text-slate-900 mb-4">🏆 Quiz Complete! 🏆</h2>
             <p class="text-lg text-slate-700 mb-2">Your Final Score:</p>
             <div id="score-circle" class="relative w-40 h-40 mx-auto flex items-center justify-center rounded-full bg-indigo-100 mb-6 border-4 border-indigo-200">
@@ -107,19 +166,17 @@
             </div>
             <p id="score-summary" class="text-slate-600 text-lg mb-8"></p>
             <div class="flex flex-col sm:flex-row justify-center gap-4">
-                 <button id="review-btn" class="btn bg-white hover:bg-slate-200 text-slate-700 font-bold py-3 px-6 rounded-lg shadow-md">Review Answers</button>
-                 <button id="restart-btn" class="btn bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-6 rounded-lg shadow-md">Restart Quiz</button>
+                 <button id="review-btn" class="btn btn-secondary py-3 px-6">Review Answers</button>
+                 <button id="restart-btn" class="btn btn-primary py-3 px-6">Restart Quiz</button>
             </div>
         </div>
         
-        <!-- Review Screen -->
-        <div id="review-container" class="hidden bg-white p-6 sm:p-8 rounded-2xl shadow-xl">
+        <div id="review-container" class="hidden card p-6 sm:p-8 rounded-2xl">
              <h2 class="text-3xl font-bold text-slate-900 mb-6 text-center">📋 Answer Review</h2>
              <div id="review-content" class="space-y-6">
-                <!-- Review content will be generated here -->
-             </div>
+                 </div>
              <div class="text-center mt-8">
-                <button id="back-to-score-btn" class="btn bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-lg shadow-md">Back to Score</button>
+                 <button id="back-to-score-btn" class="btn btn-primary py-2 px-4">Back to Score</button>
              </div>
         </div>
 
@@ -133,64 +190,64 @@
         // --- Data ---
         const quizData = [
             {
-              title: "Q1: API Versioning (Same DNS/SSL)",
-              description: "Your company has decided to make a major revision of their API in order to create better experiences for their developers. They need to keep the old version of the API available and deployable, while allowing new customers and testers to try out the new API. They want to keep the same SSL and DNS records in place to serve both APIs. What should they do?",
-              options: [
-                "Configure a new load balancer",
-                "Reconfigure old clients",
-                "Have the old API forward traffic to the new API based on the path",
-                "Use separate backend pools for each API path behind the load balancer"
-              ],
-              correctAnswer: "Use separate backend pools for each API path behind the load balancer",
-              feedback: {
-                "Configure a new load balancer": "Incorrect. This would likely require new DNS/SSL records.",
-                "Reconfigure old clients": "Incorrect. This would disrupt existing clients and is not a good practice for API versioning.",
-                "Have the old API forward traffic to the new API based on the path": "Incorrect. This approach is risky and tightly couples the two API versions.",
-                "Use separate backend pools for each API path behind the load balancer": "Correct! An HTTP(S) Load Balancer can use path-based routing (e.g., /v1/*, /v2/*) to direct traffic to different backends. This is the standard way to manage API versions under a single domain."
-              }
+                title: "Q1: API Versioning (Same DNS/SSL)",
+                description: "Your company has decided to make a major revision of their API in order to create better experiences for their developers. They need to keep the old version of the API available and deployable, while allowing new customers and testers to try out the new API. They want to keep the same SSL and DNS records in place to serve both APIs. What should they do?",
+                options: [
+                    "Configure a new load balancer",
+                    "Reconfigure old clients",
+                    "Have the old API forward traffic to the new API based on the path",
+                    "Use separate backend pools for each API path behind the load balancer"
+                ],
+                correctAnswer: "Use separate backend pools for each API path behind the load balancer",
+                feedback: {
+                    "Configure a new load balancer": "Incorrect. This would likely require new DNS/SSL records.",
+                    "Reconfigure old clients": "Incorrect. This would disrupt existing clients and is not a good practice for API versioning.",
+                    "Have the old API forward traffic to the new API based on the path": "Incorrect. This approach is risky and tightly couples the two API versions.",
+                    "Use separate backend pools for each API path behind the load balancer": "Correct! An HTTP(S) Load Balancer can use path-based routing (e.g., /v1/*, /v2/*) to direct traffic to different backends. This is the standard way to manage API versions under a single domain."
+                }
             },
             {
-              title: "Q2: Data Storage for Scalable SQL Analysis",
-              description: "Your company plans to migrate a multi-petabyte data set to the cloud. The data set must be available 24 hours a day. Your business analysts have experience only with using a SQL interface. How should you store the data to optimize it for ease of analysis?",
-              options: [
-                "Load data into Google BigQuery",
-                "Insert data into Google Cloud SQL",
-                "Put flat files into Google Cloud Storage",
-                "Stream into Google Cloud Datastore"
-              ],
-              correctAnswer: "Load data into Google BigQuery",
-              feedback: {
-                "Load data into Google BigQuery": "Correct! BigQuery is a serverless, highly scalable data warehouse designed for running SQL queries on massive (petabyte-scale) datasets.",
-                "Insert data into Google Cloud SQL": "Incorrect. Cloud SQL is a relational database service (OLTP) and is not designed for petabyte-scale analytics.",
-                "Put flat files into Google Cloud Storage": "Incorrect. While Cloud Storage is a good place to store the files, it does not offer a direct SQL interface for analysis.",
-                "Stream into Google Cloud Datastore": "Incorrect. Datastore is a NoSQL database and does not use a SQL interface."
-              }
+                title: "Q2: Data Storage for Scalable SQL Analysis",
+                description: "Your company plans to migrate a multi-petabyte data set to the cloud. The data set must be available 24 hours a day. Your business analysts have experience only with using a SQL interface. How should you store the data to optimize it for ease of analysis?",
+                options: [
+                    "Load data into Google BigQuery",
+                    "Insert data into Google Cloud SQL",
+                    "Put flat files into Google Cloud Storage",
+                    "Stream into Google Cloud Datastore"
+                ],
+                correctAnswer: "Load data into Google BigQuery",
+                feedback: {
+                    "Load data into Google BigQuery": "Correct! BigQuery is a serverless, highly scalable data warehouse designed for running SQL queries on massive (petabyte-scale) datasets.",
+                    "Insert data into Google Cloud SQL": "Incorrect. Cloud SQL is a relational database service (OLTP) and is not designed for petabyte-scale analytics.",
+                    "Put flat files into Google Cloud Storage": "Incorrect. While Cloud Storage is a good place to store the files, it does not offer a direct SQL interface for analysis.",
+                    "Stream into Google Cloud Datastore": "Incorrect. Datastore is a NoSQL database and does not use a SQL interface."
+                }
             },
             {
-              title: "Q3: Migrating a J2EE Application - Recommended Practices",
-              description: "The operations manager asks you for a list of recommended practices that she should consider when migrating a J2EE application to the cloud. Which three practices should you recommend? (Choose three.)",
-              type: "CHECKBOX",
-              options: [
-                "Port the application code to run on Google App Engine",
-                "Integrate Cloud Dataflow into the application to capture real-time metrics",
-                "Instrument the application with a monitoring tool like Stackdriver Debugger",
-                "Select an automation framework to reliably provision the cloud infrastructure",
-                "Deploy a continuous integration tool with automated testing in a staging environment",
-                "Migrate from MySQL to a managed NoSQL database like Google Cloud Datastore or Bigtable"
-              ],
-              correctAnswers: [
-                "Instrument the application with a monitoring tool like Stackdriver Debugger",
-                "Select an automation framework to reliably provision the cloud infrastructure",
-                "Deploy a continuous integration tool with automated testing in a staging environment"
-              ],
-              feedback: {
-                "Port the application code to run on Google App Engine": "Incorrect. This is a specific re-platforming strategy, not a universal best practice for all initial migrations.",
-                "Integrate Cloud Dataflow into the application to capture real-time metrics": "Incorrect. Dataflow is for large-scale data processing, not application metrics. Cloud Monitoring is the appropriate tool.",
-                "Instrument the application with a monitoring tool like Stackdriver Debugger": "Correct! Gaining operational visibility through monitoring and debugging is a fundamental practice for any cloud application.",
-                "Select an automation framework to reliably provision the cloud infrastructure": "Correct! Using Infrastructure as Code (IaC) ensures consistent, repeatable, and automated provisioning of environments.",
-                "Deploy a continuous integration tool with automated testing in a staging environment": "Correct! Implementing CI/CD is essential for improving release velocity, quality, and reliability.",
-                 "Migrate from MySQL to a managed NoSQL database like Google Cloud Datastore or Bigtable": "Incorrect. This represents a major database re-architecture and is not a typical initial practice for migration."
-              }
+                title: "Q3: Migrating a J2EE Application - Recommended Practices",
+                description: "The operations manager asks you for a list of recommended practices that she should consider when migrating a J2EE application to the cloud. Which three practices should you recommend? (Choose three.)",
+                type: "CHECKBOX",
+                options: [
+                    "Port the application code to run on Google App Engine",
+                    "Integrate Cloud Dataflow into the application to capture real-time metrics",
+                    "Instrument the application with a monitoring tool like Stackdriver Debugger",
+                    "Select an automation framework to reliably provision the cloud infrastructure",
+                    "Deploy a continuous integration tool with automated testing in a staging environment",
+                    "Migrate from MySQL to a managed NoSQL database like Google Cloud Datastore or Bigtable"
+                ],
+                correctAnswers: [
+                    "Instrument the application with a monitoring tool like Stackdriver Debugger",
+                    "Select an automation framework to reliably provision the cloud infrastructure",
+                    "Deploy a continuous integration tool with automated testing in a staging environment"
+                ],
+                feedback: {
+                    "Port the application code to run on Google App Engine": "Incorrect. This is a specific re-platforming strategy, not a universal best practice for all initial migrations.",
+                    "Integrate Cloud Dataflow into the application to capture real-time metrics": "Incorrect. Dataflow is for large-scale data processing, not application metrics. Cloud Monitoring is the appropriate tool.",
+                    "Instrument the application with a monitoring tool like Stackdriver Debugger": "Correct! Gaining operational visibility through monitoring and debugging is a fundamental practice for any cloud application.",
+                    "Select an automation framework to reliably provision the cloud infrastructure": "Correct! Using Infrastructure as Code (IaC) ensures consistent, repeatable, and automated provisioning of environments.",
+                    "Deploy a continuous integration tool with automated testing in a staging environment": "Correct! Implementing CI/CD is essential for improving release velocity, quality, and reliability.",
+                    "Migrate from MySQL to a managed NoSQL database like Google Cloud Datastore or Bigtable": "Incorrect. This represents a major database re-architecture and is not a typical initial practice for migration."
+                }
             },
             {
                 title: "Q4: App Engine Session State Issue",
@@ -1042,6 +1099,7 @@
         let currentQuestionIndex = 0;
         let userAnswers = new Array(quizData.length).fill(null);
         let score = 0;
+        let shuffledOptionsMap = new Map(); // Store shuffled options for consistency
 
         // --- DOM Elements ---
         const mainHeader = document.getElementById('main-header');
@@ -1059,8 +1117,28 @@
         const backToScoreBtn = document.getElementById('back-to-score-btn');
         const scoreText = document.getElementById('score-text');
         const scoreSummary = document.getElementById('score-summary');
+        const progressBar = document.getElementById('progress-bar');
+
+        // --- Icon SVGs ---
+        const checkIconSVG = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="text-emerald-500"><path fill-rule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12zm13.36-1.814a.75.75 0 10-1.06-1.06L10.5 13.19l-1.72-1.72a.75.75 0 00-1.06 1.06l2.25 2.25a.75.75 0 001.06 0l4.5-4.5z" clip-rule="evenodd" /></svg>`;
+        const crossIconSVG = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="text-rose-500"><path fill-rule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25zm-1.72 6.97a.75.75 0 011.06 0L12 9.94l.72-.72a.75.75 0 111.06 1.06L13.06 12l.72.72a.75.75 0 11-1.06 1.06L12 13.06l-.72.72a.75.75 0 01-1.06-1.06l.72-.72-.72-.72a.75.75 0 010-1.06z" clip-rule="evenodd" /></svg>`;
+
 
         // --- Functions ---
+
+        /**
+         * Shuffles an array in place using the Fisher-Yates algorithm.
+         * @param {Array} array The array to shuffle.
+         * @returns {Array} The shuffled array.
+         */
+        function shuffleArray(array) {
+            const shuffled = [...array]; // Create a copy to avoid mutating the original
+            for (let i = shuffled.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+            }
+            return shuffled;
+        }
 
         /**
          * Renders the current question to the DOM.
@@ -1070,19 +1148,27 @@
             const isAnswered = userAnswers[currentQuestionIndex] !== null;
             const questionType = question.type || 'MULTIPLE_CHOICE';
             
+            // Shuffle options only once per question per quiz attempt and store them
+            if (!shuffledOptionsMap.has(currentQuestionIndex)) {
+                shuffledOptionsMap.set(currentQuestionIndex, shuffleArray(question.options));
+            }
+            const currentShuffledOptions = shuffledOptionsMap.get(currentQuestionIndex);
+
             let optionsHtml = '';
-            question.options.forEach(option => {
+            currentShuffledOptions.forEach((option, index) => {
                 let isSelected = false;
                 if (questionType === 'CHECKBOX') {
                     isSelected = userAnswers[currentQuestionIndex] && userAnswers[currentQuestionIndex].includes(option);
                 } else {
                     isSelected = userAnswers[currentQuestionIndex] === option;
                 }
+                
+                const optionLetter = String.fromCharCode(65 + index); // A, B, C...
 
                 optionsHtml += `
-                    <div class="quiz-option mt-4 p-4 border-2 border-slate-200 rounded-lg flex items-center bg-slate-50 hover:bg-slate-100" data-option="${option}">
+                    <div class="quiz-option mt-4 p-4 border-2 rounded-lg flex items-center" data-option="${option}">
                         <input type="${questionType === 'CHECKBOX' ? 'checkbox' : 'radio'}" name="option" class="mr-4 pointer-events-none h-5 w-5 text-indigo-600 border-gray-300 focus:ring-indigo-500" ${isSelected ? 'checked' : ''} ${isAnswered ? 'disabled' : ''}>
-                        <label class="flex-1 pointer-events-none text-slate-700">${option}</label>
+                        <label class="flex-1 pointer-events-none text-slate-700"><span class="font-bold mr-2">${optionLetter}.</span>${option}</label><div class="status-icon ml-auto"></div>
                     </div>
                 `;
             });
@@ -1096,7 +1182,7 @@
                     ${optionsHtml}
                 </div>
                 <div id="feedback-container"></div>
-                ${questionType === 'CHECKBOX' && !isAnswered ? '<button id="submit-btn" class="btn mt-6 w-full bg-indigo-600 text-white font-bold py-3 px-4 rounded-lg hover:bg-indigo-700 shadow-md">Submit Answer</button>' : ''}
+                ${questionType === 'CHECKBOX' && !isAnswered ? '<button id="submit-btn" class="btn btn-primary mt-6 w-full py-3 px-4">Submit Answer</button>' : ''}
             `;
             
             updateProgress();
@@ -1159,8 +1245,6 @@
             optionsContainer.querySelectorAll('input').forEach(input => input.disabled = true);
 
             let isCorrect = false;
-            let feedbackHtml = '';
-
             if (question.type === 'CHECKBOX') {
                 const correctAnswers = new Set(question.correctAnswers);
                 const selectedAnswers = new Set(userAnswer || []);
@@ -1172,51 +1256,61 @@
             // Apply styling to options
             document.querySelectorAll('.quiz-option').forEach(optionEl => {
                 const optionText = optionEl.dataset.option;
+                const statusIconEl = optionEl.querySelector('.status-icon');
+
                 if (question.type === 'CHECKBOX') {
-                    if (question.correctAnswers.includes(optionText)) {
+                    const isCorrectChoice = question.correctAnswers.includes(optionText);
+                    const isSelected = (userAnswer || []).includes(optionText);
+
+                    if (isCorrectChoice) {
                         optionEl.classList.add('correct');
+                        statusIconEl.innerHTML = checkIconSVG;
                     }
-                    if ((userAnswer || []).includes(optionText) && !question.correctAnswers.includes(optionText)) {
-                         optionEl.classList.add('incorrect');
+                    if (isSelected && !isCorrectChoice) {
+                        optionEl.classList.add('incorrect');
+                        statusIconEl.innerHTML = crossIconSVG;
                     }
-                } else {
+                } else { // MULTIPLE_CHOICE
                     if (optionText === question.correctAnswer) {
                         optionEl.classList.add('correct');
+                        statusIconEl.innerHTML = checkIconSVG;
                     } else if (optionText === userAnswer) {
                         optionEl.classList.add('incorrect');
+                        statusIconEl.innerHTML = crossIconSVG;
                     }
                 }
             });
             
-            // Build feedback HTML
-            if (isCorrect) {
-                 if (question.type === 'CHECKBOX') {
-                    feedbackHtml = question.correctAnswers.map(ans => `<p class="mt-2 text-sm">${question.feedback[ans]}</p>`).join('');
-                } else {
-                    feedbackHtml = `<p class="mt-2 text-sm">${question.feedback[question.correctAnswer]}</p>`;
-                }
-            } else {
-                // Incorrect answer logic
+            // Build feedback HTML to show all explanations
+            let feedbackHtml = `<p class="mt-2 text-sm font-semibold">Explanations:</p>`;
+            
+            // Use the shuffled order for displaying feedback to match what the user sees
+            const currentShuffledOptions = shuffledOptionsMap.get(currentQuestionIndex);
+            currentShuffledOptions.forEach((option, index) => {
+                const explanation = question.feedback[option] || "No explanation available for this option.";
+                let isCorrectOption = false;
+                const optionLetter = String.fromCharCode(65 + index);
+
                 if (question.type === 'CHECKBOX') {
-                     feedbackHtml = `<p class="mt-2 text-sm font-semibold">Here are the correct explanations:</p>` + 
-                                   question.correctAnswers.map(ans => `<p class="mt-2 text-sm">${question.feedback[ans]}</p>`).join('');
+                    isCorrectOption = question.correctAnswers.includes(option);
                 } else {
-                    const userFeedback = question.feedback[userAnswer] 
-                        ? `<p class="mt-2 text-sm"><span class="font-bold">Your Answer's Feedback:</span> ${question.feedback[userAnswer]}</p>` 
-                        : `<p class="mt-2 text-sm">You did not select an answer.</p>`;
-
-                    const correctFeedback = question.feedback[question.correctAnswer] 
-                        ? `<p class="mt-4 text-sm"><span class="font-bold">Correct Answer's Feedback:</span> ${question.feedback[question.correctAnswer]}</p>`
-                        : '';
-                    feedbackHtml = userFeedback + correctFeedback;
+                    isCorrectOption = (option === question.correctAnswer);
                 }
-            }
 
-            const feedbackColor = isCorrect ? 'bg-green-100 border-green-500' : 'bg-red-100 border-red-500';
+                const feedbackItemHtml = `<span class="font-bold mr-2">${optionLetter}.</span> ${explanation}`;
+
+                if (isCorrectOption) {
+                    feedbackHtml += `<div class="mt-2 text-sm p-2 rounded bg-green-50 border-l-4 border-green-500">${feedbackItemHtml}</div>`;
+                } else {
+                    feedbackHtml += `<div class="mt-2 text-sm p-2 rounded bg-red-50 border-l-4 border-red-500">${feedbackItemHtml}</div>`;
+                }
+            });
+
+            const feedbackColor = isCorrect ? 'bg-emerald-50 border-emerald-500' : 'bg-rose-50 border-rose-500';
             const feedbackTitle = isCorrect ? '🎉 Correct! 🎉' : '🤔 Not Quite...';
             
             feedbackContainer.innerHTML = `
-                <div class="feedback-card p-4 border-l-4 rounded-r-lg ${feedbackColor}">
+                <div class="feedback-card p-6 border-l-4 rounded-r-lg ${feedbackColor}">
                     <h3 class="font-bold text-lg">${feedbackTitle}</h3>
                     ${feedbackHtml}
                 </div>
@@ -1228,6 +1322,8 @@
         }
 
         function updateProgress() {
+            const progressPercent = ((currentQuestionIndex + 1) / quizData.length) * 100;
+            progressBar.style.width = `${progressPercent}%`;
             currentQSpan.textContent = currentQuestionIndex + 1;
             totalQSpan.textContent = quizData.length;
         }
@@ -1301,11 +1397,11 @@
                         <div class="text-sm mt-2 grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div>
                                 <p class="font-bold mb-1">Your Answer:</p>
-                                <ul class="list-disc list-inside ${isCorrect ? 'review-answer-correct' : 'review-answer-incorrect'}">${userAnswerHtml}</ul>
+                                <ul class="list-disc list-inside ${isCorrect ? 'text-green-700 font-semibold' : 'text-red-600 font-semibold'}">${userAnswerHtml}</ul>
                             </div>
                             ${!isCorrect ? `<div>
                                 <p class="font-bold mb-1">Correct Answer:</p>
-                                <ul class="list-disc list-inside review-answer-correct">${correctAnswerHtml}</ul>
+                                <ul class="list-disc list-inside text-green-700 font-semibold">${correctAnswerHtml}</ul>
                             </div>` : ''}
                         </div>
                     </div>
@@ -1318,6 +1414,7 @@
              currentQuestionIndex = 0;
              userAnswers.fill(null);
              score = 0;
+             shuffledOptionsMap.clear(); // Clear shuffled options for a fresh start
              
              resultsContainer.classList.add('hidden');
              reviewContainer.classList.add('hidden');
@@ -1362,6 +1459,11 @@
 
         // --- Initial Load ---
         document.addEventListener('DOMContentLoaded', () => {
+            // Check if quizData is loaded
+            if (typeof quizData === 'undefined') {
+                quizContainer.innerHTML = `<p class="text-red-500 font-bold text-center">Error: Could not load questions.</p>`;
+                return;
+            }
             loadQuestion();
         });
     </script>
