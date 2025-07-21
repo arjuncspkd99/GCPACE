@@ -1,0 +1,1163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GCP Professional Cloud Architect Quiz</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f4f8;
+            background-image: linear-gradient(to top right, #f0f4f8, #d9e2ec);
+        }
+        .quiz-option {
+            transition: all 0.2s ease-in-out;
+            cursor: pointer;
+        }
+        .quiz-option:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+        .quiz-option.selected {
+            background-color: #E0E7FF; /* Indigo-100 */
+            border-color: #4f46e5; /* Indigo-600 */
+            box-shadow: 0 0 0 2px #4f46e5;
+        }
+        .quiz-option.correct {
+            background-color: #D1FAE5; /* Green-100 */
+            border-color: #059669; /* Green-600 */
+        }
+        .quiz-option.incorrect {
+            background-color: #FEE2E2; /* Red-100 */
+            border-color: #DC2626; /* Red-600 */
+        }
+        .feedback-card {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease-in-out, padding 0.5s ease-in-out, margin 0.5s ease-in-out;
+        }
+        .feedback-card.show {
+            max-height: 500px; /* Adjust as needed */
+            padding-top: 1rem;
+            padding-bottom: 1rem;
+            margin-top: 1.5rem;
+        }
+        .answered .quiz-option:not(.selected):not(.correct) {
+            cursor: not-allowed;
+            opacity: 0.6;
+            filter: grayscale(50%);
+        }
+        .review-answer-correct {
+            color: #059669; /* Green-700 */
+            font-weight: 600;
+        }
+        .review-answer-incorrect {
+            color: #DC2626; /* Red-600 */
+            font-weight: 600;
+        }
+        .btn {
+            transition: all 0.2s ease-in-out;
+        }
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body class="text-slate-800">
+
+    <div class="container mx-auto p-4 sm:p-6 lg:p-8 max-w-4xl">
+        <!-- Header -->
+        <header id="main-header" class="text-center mb-8">
+            <h1 class="text-3xl sm:text-4xl font-extrabold text-slate-900">☁️ GCP Architect Quiz 🧠</h1>
+            <p class="text-slate-600 mt-2 text-lg">Test your knowledge and prepare for certification!</p>
+        </header>
+
+        <!-- Quiz Container -->
+        <div id="quiz-container" class="bg-white p-6 sm:p-8 rounded-2xl shadow-xl">
+            <!-- This will be populated by JavaScript -->
+        </div>
+
+        <!-- Navigation and Progress -->
+        <div id="navigation-container" class="mt-8 flex items-center justify-between">
+            <button id="prev-btn" class="btn bg-white hover:bg-slate-200 text-slate-700 font-bold py-2 px-4 rounded-lg shadow-md disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none disabled:shadow-sm">Previous</button>
+            <div id="progress-indicator" class="text-sm font-medium text-slate-600">
+                Question <span id="current-q-span">1</span> of <span id="total-q-span">60</span>
+            </div>
+            <button id="next-btn" class="btn bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-lg shadow-md">Next</button>
+        </div>
+
+        <!-- Results Screen -->
+        <div id="results-container" class="hidden text-center bg-white p-8 rounded-2xl shadow-xl">
+            <h2 class="text-3xl font-bold text-slate-900 mb-4">🏆 Quiz Complete! 🏆</h2>
+            <p class="text-lg text-slate-700 mb-2">Your Final Score:</p>
+            <div id="score-circle" class="relative w-40 h-40 mx-auto flex items-center justify-center rounded-full bg-indigo-100 mb-6 border-4 border-indigo-200">
+                <span id="score-text" class="text-5xl font-extrabold text-indigo-600"></span>
+            </div>
+            <p id="score-summary" class="text-slate-600 text-lg mb-8"></p>
+            <div class="flex flex-col sm:flex-row justify-center gap-4">
+                 <button id="review-btn" class="btn bg-white hover:bg-slate-200 text-slate-700 font-bold py-3 px-6 rounded-lg shadow-md">Review Answers</button>
+                 <button id="restart-btn" class="btn bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-6 rounded-lg shadow-md">Restart Quiz</button>
+            </div>
+        </div>
+        
+        <!-- Review Screen -->
+        <div id="review-container" class="hidden bg-white p-6 sm:p-8 rounded-2xl shadow-xl">
+             <h2 class="text-3xl font-bold text-slate-900 mb-6 text-center">📋 Answer Review</h2>
+             <div id="review-content" class="space-y-6">
+                <!-- Review content will be generated here -->
+             </div>
+             <div class="text-center mt-8">
+                <button id="back-to-score-btn" class="btn bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-lg shadow-md">Back to Score</button>
+             </div>
+        </div>
+
+    </div>
+    
+    <footer class="text-center p-4 mt-8">
+        <p class="text-sm text-slate-500">Made with ❤️ by Arjun</p>
+    </footer>
+
+    <script>
+        // --- Data ---
+        const quizData = [
+            {
+              title: "Q1: API Versioning (Same DNS/SSL)",
+              description: "Your company has decided to make a major revision of their API in order to create better experiences for their developers. They need to keep the old version of the API available and deployable, while allowing new customers and testers to try out the new API. They want to keep the same SSL and DNS records in place to serve both APIs. What should they do?",
+              options: [
+                "Configure a new load balancer",
+                "Reconfigure old clients",
+                "Have the old API forward traffic to the new API based on the path",
+                "Use separate backend pools for each API path behind the load balancer"
+              ],
+              correctAnswer: "Use separate backend pools for each API path behind the load balancer",
+              feedback: {
+                "Use separate backend pools for each API path behind the load balancer": "Correct! An HTTP(S) Load Balancer can use path-based routing (e.g., /v1/*, /v2/*) to direct traffic to different backends. This is the standard way to manage API versions under a single domain."
+              }
+            },
+            {
+              title: "Q2: Data Storage for Scalable SQL Analysis",
+              description: "Your company plans to migrate a multi-petabyte data set to the cloud. The data set must be available 24 hours a day. Your business analysts have experience only with using a SQL interface. How should you store the data to optimize it for ease of analysis?",
+              options: [
+                "Load data into Google BigQuery",
+                "Insert data into Google Cloud SQL",
+                "Put flat files into Google Cloud Storage",
+                "Stream into Google Cloud Datastore"
+              ],
+              correctAnswer: "Load data into Google BigQuery",
+              feedback: {
+                "Load data into Google BigQuery": "Correct! BigQuery is a serverless, highly scalable data warehouse designed for running SQL queries on massive (petabyte-scale) datasets."
+              }
+            },
+            {
+              title: "Q3: Migrating a J2EE Application - Recommended Practices",
+              description: "The operations manager asks you for a list of recommended practices that she should consider when migrating a J2EE application to the cloud. Which three practices should you recommend? (Choose three.)",
+              type: "CHECKBOX",
+              options: [
+                "Port the application code to run on Google App Engine",
+                "Integrate Cloud Dataflow into the application to capture real-time metrics",
+                "Instrument the application with a monitoring tool like Stackdriver Debugger",
+                "Select an automation framework to reliably provision the cloud infrastructure",
+                "Deploy a continuous integration tool with automated testing in a staging environment",
+                "Migrate from MySQL to a managed NoSQL database like Google Cloud Datastore or Bigtable"
+              ],
+              correctAnswers: [
+                "Instrument the application with a monitoring tool like Stackdriver Debugger",
+                "Select an automation framework to reliably provision the cloud infrastructure",
+                "Deploy a continuous integration tool with automated testing in a staging environment"
+              ],
+              feedback: {
+                "Instrument the application with a monitoring tool like Stackdriver Debugger": "Correct! Gaining operational visibility through monitoring and debugging is a fundamental practice for any cloud application.",
+                "Select an automation framework to reliably provision the cloud infrastructure": "Correct! Using Infrastructure as Code (IaC) ensures consistent, repeatable, and automated provisioning of environments.",
+                "Deploy a continuous integration tool with automated testing in a staging environment": "Correct! Implementing CI/CD is essential for improving release velocity, quality, and reliability."
+              }
+            },
+            {
+                title: "Q4: App Engine Session State Issue",
+                description: "Your news feed web service has the following code running on Google App Engine. During peak load, users report that they can see news articles they already viewed. (Code shows sessions = {} global variable). What is the most likely cause of this problem?",
+                options: [
+                    "The session variable is local to just a single instance",
+                    "The session variable is being overwritten in Cloud Datastore",
+                    "The URL of the API needs to be modified to prevent caching",
+                    "The HTTP Expires header needs to be set to -1 stop caching"
+                ],
+                correctAnswer: "The session variable is local to just a single instance",
+                feedback: {
+                    "The session variable is local to just a single instance": "Correct! In a scaled environment like App Engine, each request from a user can be served by a different instance. Storing session state in instance memory means it is not shared, leading to inconsistent user experiences."
+                }
+            },
+            {
+                title: "Q5: Logging Tool Assessment",
+                description: "An application development team believes their current logging tool will not meet their needs for their new cloud-based product. They want a better tool to capture errors and help them analyze their historical log data. You want to help them find a solution that meets their needs. What should you do?",
+                options: [
+                    "Direct them to download and install the Google StackDriver logging agent",
+                    "Send them a list of online resources about logging best practices",
+                    "Help them define their requirements and assess viable logging tools",
+                    "Help them upgrade their current tool to take advantage of any new features"
+                ],
+                correctAnswer: "Help them define their requirements and assess viable logging tools",
+                feedback: {
+                    "Help them define their requirements and assess viable logging tools": "Correct! The essential first step in any solution design is to understand the requirements, constraints, and goals. This allows for a proper assessment of all viable options."
+                }
+            },
+            {
+                title: "Q6: Compute Engine Instance Migration",
+                description: "Your company wants to move a development application from an on-premises server to Google Cloud. The application is a three-tier web application, with the web server, application server, and database server each running on a separate virtual machine. The application will be used by 10 developers. You need to migrate the virtual machines (VMs) and establish connectivity between them. What should you do?",
+                options: [
+                    "Use Compute Engine for each server, and deploy a global load balancer.",
+                    "Use Compute Engine for each server, and deploy a Cloud VPN.",
+                    "Use Compute Engine for each server, and create a firewall rule to allow traffic between VMs.",
+                    "Use Compute Engine for each server, and set up a VPC Network and Firewall rules."
+                ],
+                correctAnswer: "Use Compute Engine for each server, and set up a VPC Network and Firewall rules.",
+                feedback: {
+                    "Use Compute Engine for each server, and set up a VPC Network and Firewall rules.": "Correct! VMs need to reside in a VPC to communicate. Firewall rules within that VPC are then used to control the specific traffic allowed between them."
+                }
+            },
+            {
+                title: "Q7: Choosing a Database for Financial Transactions",
+                description: "Your company is developing an application that stores highly sensitive financial transactions. These transactions need to be stored in a database that offers strong ACID compliance. You need to select a database to meet this requirement. Which database should you use?",
+                options: [
+                    "Google Cloud Datastore",
+                    "Google Cloud Bigtable",
+                    "Google Cloud Spanner",
+                    "Google Cloud Firestore in Native Mode"
+                ],
+                correctAnswer: "Google Cloud Spanner",
+                feedback: {
+                    "Google Cloud Spanner": "Correct! Cloud Spanner is a globally distributed, relational database that provides strong ACID compliance, making it ideal for financial applications."
+                }
+            },
+            {
+                title: "Q8: Automating VM Configuration After Deployment",
+                description: "Your company needs to deploy a large number of virtual machines (VMs) to Google Cloud. These VMs must run a specific set of configurations and software after they are deployed. You need to manage the configuration consistently and efficiently. What should you do?",
+                options: [
+                    "Write a custom deployment script and run it manually on each VM.",
+                    "Use a startup script on each VM to configure it after deployment.",
+                    "Create a custom VM image that includes all required configurations and software.",
+                    "Develop a Kubernetes Deployment to manage the VM configuration."
+                ],
+                correctAnswer: "Create a custom VM image that includes all required configurations and software.",
+                feedback: {
+                    "Create a custom VM image that includes all required configurations and software.": "Correct! 'Golden images' ensure consistent, fast, pre-configured deployments."
+                }
+            },
+            {
+                title: "Q9: High Availability for Web Application Backend",
+                description: "Your company has a multi-tier web application running on Compute Engine. The backend application servers are deployed across multiple zones in a region using managed instance groups. You need to ensure the application remains highly available even if an entire zone becomes unavailable. What should you do?",
+                options: [
+                    "Configure a regional managed instance group with autoscaling.",
+                    "Configure an HTTP(S) Load Balancer in front of the managed instance groups.",
+                    "Configure a health check on the managed instance groups and a Load Balancer.",
+                    "Configure the application with an internal load balancer across multiple zones."
+                ],
+                correctAnswer: "Configure an HTTP(S) Load Balancer in front of the managed instance groups.",
+                feedback: {
+                    "Configure an HTTP(S) Load Balancer in front of the managed instance groups.": "Correct! This provides external traffic distribution and auto-failover across zones."
+                }
+            },
+            {
+                title: "Q10: Database for Financial Transactions with Auditing",
+                description: "Your company stores highly sensitive financial transactions. These transactions need to be stored in a database that offers strong ACID compliance. Additionally, the database must support auditing to track changes to the data. Which database should you use?",
+                options: [
+                    "Google Cloud Datastore",
+                    "Google Cloud Bigtable",
+                    "Google Cloud Spanner",
+                    "Google Cloud Firestore in Native Mode"
+                ],
+                correctAnswer: "Google Cloud Spanner",
+                feedback: {
+                    "Google Cloud Spanner": "Correct! Spanner provides global strong ACID, and auditing can be built via logs."
+                }
+            },
+            {
+                title: "Q11: Selecting a Storage for Analytics Workload",
+                description: "Your company has a large collection of unstructured data (images, videos, documents). They want to store this data in Google Cloud and make it available for future analysis by data scientists. The data volume is expected to grow significantly. Which storage solution should you choose?",
+                options: [
+                    "Google Cloud Storage (Standard storage class)",
+                    "Google Cloud Storage (Nearline storage class)",
+                    "Google Cloud Filestore",
+                    "Google Cloud SQL"
+                ],
+                correctAnswer: "Google Cloud Storage (Standard storage class)",
+                feedback: {
+                    "Google Cloud Storage (Standard storage class)": "Correct! Cloud Storage is a scalable object store for unstructured data, suitable for flexible analysis."
+                }
+            },
+            {
+                title: "Q12: Network Design for On-Prem to Cloud Migration (VPC)",
+                description: "Your company plans to migrate its on-premises data center to Google Cloud. They want to ensure seamless network connectivity between their existing on-premises network and their new Google Cloud resources. They need a logically isolated, high-performance network in the cloud. Which network construct should you set up in Google Cloud?",
+                options: [
+                    "Shared VPC",
+                    "VPC Network",
+                    "Firewall Rules",
+                    "VPN Gateway"
+                ],
+                correctAnswer: "VPC Network",
+                feedback: {
+                    "VPC Network": "Correct! A VPC is the fundamental, isolated private network in GCP."
+                }
+            },
+            {
+                title: "Q13: Cloud Cost Optimization for Compute Engine",
+                description: "Your company is running several non-critical Compute Engine instances that process batch jobs. These jobs can tolerate some interruptions and have flexible start/stop times. You want to optimize costs for these instances. What type of Compute Engine instance should you recommend?",
+                options: [
+                    "Standard instances",
+                    "Preemptible instances",
+                    "Custom machine types",
+                    "Sole-tenant nodes"
+                ],
+                correctAnswer: "Preemptible instances",
+                feedback: {
+                    "Preemptible instances": "Correct! Preemptible VMs are significantly cheaper for fault-tolerant, interruptible workloads."
+                }
+            },
+            {
+                title: "Q14: Securing Access to Cloud Storage (Specific Users)",
+                description: "Your company wants to grant specific individuals in their data science team read-only access to a Google Cloud Storage bucket containing sensitive research data. You need to ensure access is tightly controlled and follows the principle of least privilege. What is the most secure way to grant this access?",
+                options: [
+                    "Make the bucket publicly readable",
+                    "Grant the roles/storage.objectViewer role to individual users",
+                    "Grant the roles/storage.admin role to the data science team's service account",
+                    "Set up signed URLs for each object they need to access"
+                ],
+                correctAnswer: "Grant the roles/storage.objectViewer role to individual users",
+                feedback: {
+                    "Grant the roles/storage.objectViewer role to individual users": "Correct! This provides read-only access (least privilege) directly to the specific users who need it."
+                }
+            },
+            {
+                title: "Q15: Choosing a Database for High-Throughput IoT Data",
+                description: "Your company is developing an IoT application that collects sensor data from millions of devices. This data needs to be ingested at extremely high throughput and made available for near real-time analytics. The data is mostly time-series based. Which database should you use?",
+                options: [
+                    "Google Cloud SQL",
+                    "Google Cloud Spanner",
+                    "Google Cloud Bigtable",
+                    "Google Cloud Datastore"
+                ],
+                correctAnswer: "Google Cloud Bigtable",
+                feedback: {
+                    "Google Cloud Bigtable": "Correct! Bigtable is optimized for massive, high-throughput time-series data ingestion."
+                }
+            },
+            {
+                title: "Q16: Data Transfer for Large On-Premises Dataset to GCP",
+                description: "Your company needs to migrate a large on-premises dataset (several petabytes) to Google Cloud Storage. The internet connection at the data center is slow and unreliable. You need a reliable and fast method for this initial bulk data transfer. What should you do?",
+                options: [
+                    "Use gsutil rsync to synchronize data to Cloud Storage.",
+                    "Use Transfer Appliance to transfer the data.",
+                    "Use Storage Transfer Service to transfer the data.",
+                    "Use a Direct Peering connection to transfer the data."
+                ],
+                correctAnswer: "Use Transfer Appliance to transfer the data.",
+                feedback: {
+                    "Use Transfer Appliance to transfer the data.": "Correct! A physical appliance bypasses unreliable internet for petabyte-scale transfers."
+                }
+            },
+            {
+                title: "Q17: Managing Configuration for Multiple Applications on GKE",
+                description: "Your company is running multiple containerized applications on Google Kubernetes Engine (GKE). Each application has its own set of configurations (e.g., API keys, database connection strings, environment variables) that need to be managed securely and updated easily without redeploying the applications. What should you use to manage these configurations?",
+                options: [
+                    "Kubernetes Secrets for sensitive data, and ConfigMaps for non-sensitive data.",
+                    "Store all configurations as environment variables directly in the Deployment manifest.",
+                    "Store all configurations in a Cloud Storage bucket and retrieve them at runtime.",
+                    "Use a custom solution to store and inject configurations into pods."
+                ],
+                correctAnswer: "Kubernetes Secrets for sensitive data, and ConfigMaps for non-sensitive data.",
+                feedback: {
+                    "Kubernetes Secrets for sensitive data, and ConfigMaps for non-sensitive data.": "Correct! These are the standard K8s objects for secure and dynamic configuration."
+                }
+            },
+            {
+                title: "Q18: Deploying a Scalable Microservices Architecture",
+                description: "Your company wants to develop a new application using a microservices architecture. They need a platform that can automatically scale individual microservices, handle service discovery, and provide load balancing between them. Which Google Cloud service should you choose?",
+                options: [
+                    "Google Compute Engine",
+                    "Google Kubernetes Engine (GKE)",
+                    "Google App Engine Standard",
+                    "Google Cloud Functions"
+                ],
+                correctAnswer: "Google Kubernetes Engine (GKE)",
+                feedback: {
+                    "Google Kubernetes Engine (GKE)": "Correct! GKE is the industry standard for containerized microservices orchestration, offering native scaling, service discovery, and load balancing."
+                }
+            },
+            {
+                title: "Q19: Disaster Recovery for Cloud SQL (RPO/RTO)",
+                description: "Your company is running a critical application using Google Cloud SQL for MySQL. They need a disaster recovery strategy that ensures a Recovery Point Objective (RPO) of near zero and a Recovery Time Objective (RTO) in minutes. What should you do?",
+                options: [
+                    "Enable automated daily backups.",
+                    "Configure Point-in-Time Recovery.",
+                    "Set up a read replica in a different region.",
+                    "Configure High Availability (HA) with cross-region replication."
+                ],
+                correctAnswer: "Configure High Availability (HA) with cross-region replication.",
+                feedback: {
+                    "Configure High Availability (HA) with cross-region replication.": "Correct! This configuration provides a synchronous standby for near-zero RPO and an RTO in minutes."
+                }
+            },
+            {
+                title: "Q20: Firewall Rule for Specific IP Address Range",
+                description: "You need to create a firewall rule in your GCP VPC network that allows incoming HTTP traffic from 192.168.1.0/24. Which configuration should you use for the firewall rule?",
+                options: [
+                    "Direction: Egress, Source IP ranges: 192.168.1.0/24, Protocols and ports: tcp:80",
+                    "Direction: Ingress, Source IP ranges: 192.168.1.0/24, Protocols and ports: tcp:80",
+                    "Direction: Egress, Destination IP ranges: 192.168.1.0/24, Protocols and ports: tcp:80",
+                    "Direction: Ingress, Destination IP ranges: 192.168.1.0/24, Protocols and ports: tcp:80"
+                ],
+                correctAnswer: "Direction: Ingress, Source IP ranges: 192.168.1.0/24, Protocols and ports: tcp:80",
+                feedback: {
+                    "Direction: Ingress, Source IP ranges: 192.168.1.0/24, Protocols and ports: tcp:80": "Correct! Ingress is for incoming traffic, and Source specifies the origin."
+                }
+            },
+            {
+                title: "Q21: Data Retention Policy for Regulatory Compliance",
+                description: "Your company has a regulatory requirement to retain specific log data for seven years. This data is rarely accessed after the first 30 days. You need a cost-effective storage solution that meets this retention policy. Which Cloud Storage class should you use?",
+                options: ["Standard", "Nearline", "Coldline", "Archive"],
+                correctAnswer: "Archive",
+                feedback: {
+                    "Archive": "Correct! Archive is the most cost-effective for data accessed less than once a year with long-term retention needs."
+                }
+            },
+            {
+                title: "Q22: Serverless Application Development with Event-Driven Functions",
+                description: "Your company wants to develop a new application that processes events from various sources (e.g., file uploads, database changes, messages on a queue). They want to use a fully managed, serverless platform that automatically scales and requires minimal operational overhead for individual pieces of logic. Which service should you choose?",
+                options: ["Google App Engine", "Google Kubernetes Engine", "Google Cloud Functions", "Google Compute Engine"],
+                correctAnswer: "Google Cloud Functions",
+                feedback: {
+                    "Google Cloud Functions": "Correct! Cloud Functions is a fully managed, serverless FaaS platform ideal for event-driven, short-lived logic."
+                }
+            },
+            {
+                title: "Q23: Managing Secrets and Certificates in GKE",
+                description: "Your application running on Google Kubernetes Engine (GKE) requires access to sensitive information like API keys and SSL/TLS certificates. You need a secure and manageable way to store and inject these secrets into your application pods. Which method should you use?",
+                options: [
+                    "Store secrets directly in Docker images.",
+                    "Use Kubernetes Secrets.",
+                    "Mount secrets from a Cloud Storage bucket.",
+                    "Hardcode secrets in application code."
+                ],
+                correctAnswer: "Use Kubernetes Secrets.",
+                feedback: {
+                    "Use Kubernetes Secrets.": "Correct! This is the native, secure Kubernetes method to store and inject sensitive data into pods."
+                }
+            },
+            {
+                title: "Q24: Migrating On-Premise Relational Database (Minimal Change)",
+                description: "Your company wants to migrate an existing on-premises relational database (PostgreSQL) to Google Cloud with minimal changes to the application code. They need a fully managed service. Which service should you choose?",
+                options: ["Google Cloud Spanner", "Google Cloud Bigtable", "Google Cloud SQL", "Google Cloud Datastore"],
+                correctAnswer: "Google Cloud SQL",
+                feedback: {
+                    "Google Cloud SQL": "Correct! Cloud SQL is a fully managed relational DB service supporting PostgreSQL, enabling minimal changes (re-hosting)."
+                }
+            },
+            {
+                title: "Q25: Network Performance for Direct Traffic to GCE VMs",
+                description: "Your company has an application running on Compute Engine VMs that experiences high network latency for direct inbound traffic from the internet. They need to optimize network performance for these connections. What should they do?",
+                options: [
+                    "Deploy a Global Load Balancer in front of the VMs.",
+                    "Use a Cloud VPN connection.",
+                    "Increase the network bandwidth of the VMs.",
+                    "Enable VPC Service Controls."
+                ],
+                correctAnswer: "Deploy a Global Load Balancer in front of the VMs.",
+                feedback: {
+                    "Deploy a Global Load Balancer in front of the VMs.": "Correct! A Global Load Balancer provides a single, global entry point, routing users to the closest healthy backend for lower latency via Google's edge network."
+                }
+            },
+            {
+                title: "Q26: Storing and Querying High-Volume Log Data",
+                description: "Your application generates a very high volume of log data that needs to be stored and efficiently queried for debugging and auditing purposes. The data will grow over time, and you need a scalable solution. Which Google Cloud services should you use?",
+                options: [
+                    "Cloud Storage for logs, and Cloud SQL for queries.",
+                    "Cloud Logging for ingestion and storage, and BigQuery for analytical queries.",
+                    "Cloud Datastore for logs, and Cloud Functions for queries.",
+                    "Cloud Bigtable for logs, and Dataflow for queries."
+                ],
+                correctAnswer: "Cloud Logging for ingestion and storage, and BigQuery for analytical queries.",
+                feedback: {
+                    "Cloud Logging for ingestion and storage, and BigQuery for analytical queries.": "Correct! Cloud Logging handles high-volume ingestion/storage, and BigQuery is ideal for scalable analytical queries on logs."
+                }
+            },
+            {
+                title: "Q27: Managing User Access to Multiple Projects",
+                description: "Your company has multiple Google Cloud projects, each for a different team (e.g., Development, Staging, Production). You need to manage user access centrally and consistently across these projects. Which IAM feature should you use?",
+                options: ["Service Accounts", "Custom Roles", "Organizations and Folders", "Project IAM policies"],
+                correctAnswer: "Organizations and Folders",
+                feedback: {
+                    "Organizations and Folders": "Correct! This provides a central hierarchy to manage and apply consistent IAM policies across multiple projects."
+                }
+            },
+            {
+                title: "Q28: Designing for High Availability for a Stateful Application",
+                description: "You are designing a critical, stateful application that needs to be highly available across multiple zones within a region. If an instance fails, it should quickly fail over to another healthy instance, retaining its state. Which design pattern should you use for state?",
+                options: [
+                    "Store state in local disk and use persistent disk snapshots for backup.",
+                    "Store state in an external, highly available database service.",
+                    "Store state in a distributed cache like Redis and replicate it.",
+                    "Store state in a Google Cloud Storage bucket."
+                ],
+                correctAnswer: "Store state in an external, highly available database service.",
+                feedback: {
+                    "Store state in an external, highly available database service.": "Correct! Externalizing state to a managed, HA database ensures persistence and quick recovery across failures."
+                }
+            },
+            {
+                title: "Q29: Network Connectivity for Hybrid Cloud (High Bandwidth)",
+                description: "Your company needs to establish high-bandwidth, low-latency, and secure connectivity between its on-premises data center and Google Cloud for mission-critical applications. Which networking solution should you choose?",
+                options: ["Cloud VPN", "Direct Peering", "Partner Interconnect", "Dedicated Interconnect"],
+                correctAnswer: "Dedicated Interconnect",
+                feedback: {
+                    "Dedicated Interconnect": "Correct! This provides a direct, private physical connection with the highest bandwidth and lowest latency for mission-critical hybrid needs."
+                }
+            },
+            {
+                title: "Q30: Migrating a Monolithic Application to Containers (Minimal Refactoring)",
+                description: "Your company has a monolithic application running on VMs. They want to migrate it to a containerized environment on Google Cloud with minimal refactoring to gain scalability and portability benefits. Which service should you use?",
+                options: ["Google App Engine", "Google Kubernetes Engine (GKE)", "Google Cloud Functions", "Google Compute Engine"],
+                correctAnswer: "Google Kubernetes Engine (GKE)",
+                feedback: {
+                    "Google Kubernetes Engine (GKE)": "Correct! GKE allows 'lift-and-shift' of monoliths into containers with minimal refactoring, gaining Kubernetes orchestration benefits."
+                }
+            },
+            {
+                title: "Q31: Securing Internal HTTP Traffic between Microservices",
+                description: "Your microservices application runs on Google Kubernetes Engine (GKE). You need to secure the internal HTTP communication between your microservices, ensuring that only authorized services can communicate with each other. Which approach should you use?",
+                options: [
+                    "Use Network Policies to restrict traffic.",
+                    "Implement mTLS (mutual TLS) using a service mesh like Istio.",
+                    "Configure firewall rules within the GKE cluster.",
+                    "Use internal load balancing to encrypt traffic."
+                ],
+                correctAnswer: "Implement mTLS (mutual TLS) using a service mesh like Istio.",
+                feedback: {
+                    "Implement mTLS (mutual TLS) using a service mesh like Istio.": "Correct! A service mesh like Istio provides mTLS for robust encryption and authentication of internal service-to-service communication."
+                }
+            },
+            {
+                title: "Q32: Real-time Data Streaming and Processing",
+                description: "Your company has a new product that generates continuous streams of data from user interactions. You need to ingest this data in real time, process it, and load it into a data warehouse for immediate analysis. Which combination of services should you use?",
+                options: [
+                    "Cloud Storage and Dataflow.",
+                    "Pub/Sub and Dataflow.",
+                    "Cloud SQL and Dataproc.",
+                    "Cloud Bigtable and BigQuery."
+                ],
+                correctAnswer: "Pub/Sub and Dataflow.",
+                feedback: {
+                    "Pub/Sub and Dataflow.": "Correct! Pub/Sub is for real-time ingestion, and Dataflow is for real-time stream processing (ETL) to a warehouse."
+                }
+            },
+            {
+                title: "Q33: Monitoring Application Performance and Logs",
+                description: "Your development team needs a comprehensive solution to monitor application performance, track errors, and analyze logs in real time across your Google Cloud environment. Which service should they primarily use?",
+                options: ["Cloud Source Repositories", "Cloud Build", "Cloud Monitoring", "Cloud Trace"],
+                correctAnswer: "Cloud Monitoring",
+                feedback: {
+                    "Cloud Monitoring": "Correct! Cloud Monitoring is the primary service for collecting, visualizing, and alerting on metrics, logs, and uptime across GCP."
+                }
+            },
+            {
+                title: "Q34: Cost-Effective Storage for Infrequently Accessed Archival Data",
+                description: "Your company has a large volume of historical data that needs to be stored for compliance reasons. This data is rarely accessed (less than once a year) but must be retained for decades. You need the most cost-effective storage option. Which Cloud Storage class should you use?",
+                options: ["Standard", "Nearline", "Coldline", "Archive"],
+                correctAnswer: "Archive",
+                feedback: {
+                    "Archive": "Correct! Archive is the most cost-effective for long-term retention of data accessed less than once a year."
+                }
+            },
+            {
+                title: "Q35: Automating VM Deployment and Scaling",
+                description: "You need to deploy a fleet of Compute Engine VMs that run identical web servers. The number of VMs needs to automatically scale up or down based on traffic load. You also want to automate the deployment of these VMs. Which Compute Engine feature should you use?",
+                options: [
+                    "Custom images and startup scripts.",
+                    "Instance templates and managed instance groups.",
+                    "Sole-tenant nodes and autoscaling.",
+                    "Snapshots and instance templates."
+                ],
+                correctAnswer: "Instance templates and managed instance groups.",
+                feedback: {
+                    "Instance templates and managed instance groups.": "Correct! Instance templates define VM config, and Managed Instance Groups (MIGs) use them for auto-scaling and deployment."
+                }
+            },
+            {
+                title: "Q36: Centralized Log Collection and Aggregation",
+                description: "Your company operates applications across multiple Google Cloud projects. You need to centralize all application and infrastructure logs from these projects into a single location for easier analysis and compliance. Which service should you use?",
+                options: ["Cloud Storage", "Cloud Logging", "BigQuery", "Cloud SQL"],
+                correctAnswer: "Cloud Logging",
+                feedback: {
+                    "Cloud Logging": "Correct! Cloud Logging (via Log Sinks/aggregated exports) centralizes and routes logs from multiple projects."
+                }
+            },
+            {
+                title: "Q37: Data Ingestion for Real-time Dashboards",
+                description: "You are building a real-time analytics dashboard for your application. User clickstream data needs to be ingested continuously, transformed minimally, and then made available for immediate display on the dashboard. Which service should you use for ingestion?",
+                options: ["Cloud Storage", "Cloud Pub/Sub", "Cloud Bigtable", "Cloud SQL"],
+                correctAnswer: "Cloud Pub/Sub",
+                feedback: {
+                    "Cloud Pub/Sub": "Correct! Pub/Sub is a fully managed, real-time messaging service ideal for ingesting continuous data streams like clickstreams."
+                }
+            },
+            {
+                title: "Q38: Managing API Endpoints and Security",
+                description: "Your company has multiple internal and external APIs that need to be centrally managed, secured, and monitored. You need a solution that can handle authentication, authorization, rate limiting, and analytics for all your APIs. Which service should you use?",
+                options: ["Cloud Load Balancing", "API Gateway", "Cloud DNS", "Identity-Aware Proxy (IAP)"],
+                correctAnswer: "API Gateway",
+                feedback: {
+                    "API Gateway": "Correct! API Gateway is a fully managed service for creating, securing, and managing APIs with central control."
+                }
+            },
+            {
+                title: "Q39: Migrating a Data Warehouse for Scalability",
+                description: "Your company currently runs an on-premises data warehouse that is struggling to scale with increasing data volumes and complex analytical queries. You need to migrate it to Google Cloud to achieve high scalability and performance for analytical workloads. Which service should you use?",
+                options: ["Google Cloud SQL", "Google Cloud Spanner", "Google Cloud BigQuery", "Google Cloud Bigtable"],
+                correctAnswer: "Google Cloud BigQuery",
+                feedback: {
+                    "Google Cloud BigQuery": "Correct! BigQuery is a serverless, highly scalable enterprise data warehouse built for analytical queries on massive datasets."
+                }
+            },
+            {
+                title: "Q40: Setting Up CI/CD for GKE Application",
+                description: "You are deploying a new application to Google Kubernetes Engine (GKE). You need to set up a Continuous Integration/Continuous Delivery (CI/CD) pipeline that automatically builds your container images, tests them, and deploys them to GKE when code changes are committed. Which combination of services should you use?",
+                options: [
+                    "Cloud Source Repositories, Cloud Build, and Cloud Deploy.",
+                    "Cloud Source Repositories, Cloud Functions, and Cloud Run.",
+                    "Cloud Storage, Cloud Build, and Cloud Scheduler.",
+                    "Cloud Code, Cloud Build, and Compute Engine."
+                ],
+                correctAnswer: "Cloud Source Repositories, Cloud Build, and Cloud Deploy.",
+                feedback: {
+                    "Cloud Source Repositories, Cloud Build, and Cloud Deploy.": "Correct! This combination is the native integrated CI/CD solution for GKE."
+                }
+            },
+            {
+                title: "Q41: Optimizing Object Storage for Cost and Access (Variable Frequency)",
+                description: "Your company stores large amounts of unstructured data (e.g., historical reports, media files) in Google Cloud Storage. The access patterns for this data vary: some files are accessed frequently for a short period, while others are accessed rarely after initial upload. You need to optimize storage costs while ensuring data is accessible when needed. What should you do?",
+                options: [
+                    "Use the Standard storage class for all data.",
+                    "Use a Lifecycle Management policy to transition data between storage classes.",
+                    "Use the Archive storage class for all data.",
+                    "Use Nearline storage class for all data."
+                ],
+                correctAnswer: "Use a Lifecycle Management policy to transition data between storage classes.",
+                feedback: {
+                    "Use a Lifecycle Management policy to transition data between storage classes.": "Correct! Lifecycle Management automates cost optimization by moving objects to cheaper storage classes based on age or access patterns."
+                }
+            },
+            {
+                title: "Q42: Data Processing for Big Data Batch Jobs",
+                description: "Your data science team needs to process multi-terabyte datasets using Apache Spark batch jobs. They want a fully managed service that can quickly provision and scale Spark clusters without manual infrastructure management. Which service should you recommend?",
+                options: ["Google Cloud Dataflow", "Google Cloud Dataproc", "Google Compute Engine", "Google Kubernetes Engine"],
+                correctAnswer: "Google Cloud Dataproc",
+                feedback: {
+                    "Google Cloud Dataproc": "Correct! Dataproc is a fully managed service for running Apache Spark, Hadoop, and other big data clusters."
+                }
+            },
+            {
+                title: "Q43: Managing Network Access to Services within a VPC",
+                description: "You have a multi-tier application deployed across different Compute Engine VMs within a single VPC Network. You need to restrict inbound network access to specific application services based on their internal IP addresses and ports, allowing only authorized communication between tiers. Which networking feature should you use?",
+                options: ["Network Tags", "Firewall Rules", "VPC Service Controls", "Service Accounts"],
+                correctAnswer: "Firewall Rules",
+                feedback: {
+                    "Firewall Rules": "Correct! VPC Firewall Rules control traffic to/from VM instances based on IPs, ports, and tags, allowing fine-grained control."
+                }
+            },
+            {
+                title: "Q44: Storing Session State for Highly Scalable Web App",
+                description: "Your web application is experiencing high traffic and needs to scale horizontally across many instances. You need to store user session state securely and ensure it's accessible by any instance, even if an instance restarts or fails. Which solution should you choose?",
+                options: [
+                    "In-memory session on each web server instance.",
+                    "Google Cloud Memorystore for Redis.",
+                    "Client-side cookies with encrypted session data.",
+                    "Persistent Disk attached to a single web server."
+                ],
+                correctAnswer: "Google Cloud Memorystore for Redis.",
+                feedback: {
+                    "Google Cloud Memorystore for Redis.": "Correct! Memorystore for Redis provides a managed, in-memory data store that is scalable and ideal for externalized session state."
+                }
+            },
+            {
+                title: "Q45: Centralized User Directory for Hybrid Cloud",
+                description: "Your company has an existing on-premises Active Directory for user management. They are migrating applications to Google Cloud and need to maintain a single source of truth for user identities. Users in the cloud should authenticate against the existing Active Directory. Which solution should you implement?",
+                options: ["Set up Cloud Identity.", "Use Identity Platform.", "Implement Managed Microsoft AD.", "Configure Directory Sync."],
+                correctAnswer: "Configure Directory Sync.",
+                feedback: {
+                    "Configure Directory Sync.": "Correct! Directory Sync (GCDS) synchronizes users from on-premises Active Directory to Cloud Identity, allowing authentication against the existing AD."
+                }
+            },
+            {
+                title: "Q46: Event-Driven Architecture for Data Processing",
+                description: "You need to design an architecture that processes incoming data files (e.g., CSVs, images) as soon as they are uploaded to a Cloud Storage bucket. The processing involves data validation and transformation. You want a serverless solution that is cost-effective and scales automatically. Which combination of services should you use?",
+                options: [
+                    "Cloud Storage with Cloud Functions.",
+                    "Cloud Pub/Sub with Cloud Dataflow.",
+                    "Cloud Storage with Compute Engine.",
+                    "Cloud Pub/Sub with Cloud Run."
+                ],
+                correctAnswer: "Cloud Storage with Cloud Functions.",
+                feedback: {
+                    "Cloud Storage with Cloud Functions.": "Correct! Cloud Functions can be triggered by Cloud Storage events, providing a serverless, auto-scaling solution for file processing."
+                }
+            },
+            {
+                title: "Q47: Database for Complex Analytics with Geospatial Data",
+                description: "Your company needs to perform complex analytical queries on a large dataset that includes geospatial information. Data scientists need to run ad-hoc queries and combine geospatial data with other business data. Which database service should you choose?",
+                options: ["Google Cloud SQL", "Google Cloud Spanner", "Google Cloud Bigtable", "Google BigQuery"],
+                correctAnswer: "Google BigQuery",
+                feedback: {
+                    "Google BigQuery": "Correct! BigQuery supports complex analytical queries, including geospatial functions (GIS), on massive datasets."
+                }
+            },
+            {
+                title: "Q48: Disaster Recovery for Stateless Web Application",
+                description: "You have a critical, stateless web application deployed on Google Compute Engine instances using Managed Instance Groups in a single region. You need a disaster recovery strategy that minimizes downtime in case of a regional outage. What should you do?",
+                options: [
+                    "Create regular snapshots of the persistent disks.",
+                    "Set up a Multi-Region Load Balancer and deploy MIGs in another region.",
+                    "Configure a Cloud VPN connection to an on-premises DR site.",
+                    "Implement a manual failover process to a standby application in another zone."
+                ],
+                correctAnswer: "Set up a Multi-Region Load Balancer and deploy MIGs in another region.",
+                feedback: {
+                    "Set up a Multi-Region Load Balancer and deploy MIGs in another region.": "Correct! A Multi-Region Load Balancer can route traffic to the nearest healthy region, providing DR for regional outages."
+                }
+            },
+            {
+                title: "Q49: Secure Access to Internal Applications (No VPN)",
+                description: "Your development team needs to securely access several internal web applications running on Compute Engine VMs, without using a VPN. Access should be controlled based on user identity. Which service should you use?",
+                options: ["Cloud VPN", "Cloud Interconnect", "Identity-Aware Proxy (IAP)", "Cloud Armor"],
+                correctAnswer: "Identity-Aware Proxy (IAP)",
+                feedback: {
+                    "Identity-Aware Proxy (IAP)": "Correct! IAP provides secure, identity-based access to internal web apps over the public internet, eliminating the need for a VPN."
+                }
+            },
+            {
+                title: "Q50: Centralized Metrics and Monitoring for Hybrid Environment",
+                description: "Your company has applications running both on-premises and on Google Cloud. You need a single pane of glass to monitor performance metrics and logs from both environments. Which service should you use?",
+                options: ["Cloud Logging", "Cloud Monitoring", "Cloud Trace", "Cloud Audit Logs"],
+                correctAnswer: "Cloud Monitoring",
+                feedback: {
+                    "Cloud Monitoring": "Correct! Cloud Monitoring can ingest metrics and logs from both GCP and on-premises environments, providing unified visibility."
+                }
+            },
+            {
+                title: "Q51: Choosing a Database for Financial Ledger (Append-Only)",
+                description: "Your company needs to store a financial ledger that requires append-only operations and extremely high write throughput. Data is typically accessed via range queries on the ledger entries. Which database should you use?",
+                options: ["Google Cloud SQL", "Google Cloud Spanner", "Google Cloud Bigtable", "Google Cloud Firestore"],
+                correctAnswer: "Google Cloud Bigtable",
+                feedback: {
+                    "Google Cloud Bigtable": "Correct! Bigtable is a NoSQL database optimized for very high write throughput and range queries, suitable for ledger-like data."
+                }
+            },
+            {
+                title: "Q52: Data Ingestion for Batch Analytics (Cost-Effective)",
+                description: "You need to ingest large batches of data files (e.g., daily CSV reports from partners) into Google Cloud Storage. This process should be cost-effective and reliable. Which method should you use?",
+                options: [
+                    "Use gsutil cp from a Compute Engine VM.",
+                    "Use Storage Transfer Service.",
+                    "Use Cloud Pub/Sub.",
+                    "Use Cloud Dataflow."
+                ],
+                correctAnswer: "Use Storage Transfer Service.",
+                feedback: {
+                    "Use Storage Transfer Service.": "Correct! This is a fully managed service for large-scale, automated data transfers into Cloud Storage."
+                }
+            },
+            {
+                title: "Q53: Automating Infrastructure Deployment in Production",
+                description: "Your company wants to automate the deployment of its production infrastructure (VPC, subnets, Compute Engine instances, load balancers) in Google Cloud. They need a declarative, repeatable, and version-controlled approach. Which tool should you use?",
+                options: ["Cloud Console", "gcloud CLI", "Deployment Manager", "Cloud Shell"],
+                correctAnswer: "Deployment Manager",
+                feedback: {
+                    "Deployment Manager": "Correct! Deployment Manager is Google Cloud's native Infrastructure as Code (IaC) service."
+                }
+            },
+            {
+                title: "Q54: Optimizing Web Application Latency Globally",
+                description: "Your web application serves users globally. You need to minimize latency for users accessing the application from different geographic locations. Which load balancing solution should you use?",
+                options: [
+                    "Regional HTTP(S) Load Balancer",
+                    "Internal HTTP(S) Load Balancer",
+                    "External HTTP(S) Load Balancer (Global)",
+                    "Network Load Balancer (External)"
+                ],
+                correctAnswer: "External HTTP(S) Load Balancer (Global)",
+                feedback: {
+                    "External HTTP(S) Load Balancer (Global)": "Correct! It uses Google's global network to route requests to the closest backend, minimizing latency."
+                }
+            },
+            {
+                title: "Q55: Multi-Factor Authentication for GCP Console",
+                description: "Your company wants to enhance the security of access to the Google Cloud Console for administrators. They need to implement a strong authentication method beyond just passwords. Which security feature should you enable?",
+                options: ["VPC Service Controls", "Context-Aware Access", "Two-Step Verification", "Identity Platform"],
+                correctAnswer: "Two-Step Verification",
+                feedback: {
+                    "Two-Step Verification": "Correct! Two-Step Verification (MFA/2FA) adds a second layer of security to user accounts."
+                }
+            },
+            {
+                title: "Q56: Managing Multiple Cloud Resources as a Single Unit",
+                description: "You are deploying a new application composed of several interdependent Google Cloud resources (e.g., Compute Engine instances, Cloud SQL databases, Cloud Storage buckets, Pub/Sub topics). You need to manage these resources as a single unit, ensuring consistent deployment and updates. Which concept should you use?",
+                options: [
+                    "Separate projects for each resource type.",
+                    "Use a single project for all resources and manage manually.",
+                    "Define them using a resource hierarchy (Organization, Folders, Projects).",
+                    "Group them logically into a Cloud Deployment Manager template."
+                ],
+                correctAnswer: "Group them logically into a Cloud Deployment Manager template.",
+                feedback: {
+                    "Group them logically into a Cloud Deployment Manager template.": "Correct! An IaC tool like Deployment Manager allows you to define all resources as a single, deployable unit."
+                }
+            },
+            {
+                title: "Q57: Cost-Effective Storage for Infrequently Accessed Backups",
+                description: "Your company performs daily backups of its on-premises databases and needs to store them in Google Cloud for disaster recovery. These backups are rarely accessed (only in case of disaster recovery), but must be retrieved quickly when needed. You need a cost-effective storage solution. Which Cloud Storage class should you choose?",
+                options: ["Standard", "Nearline", "Coldline", "Archive"],
+                correctAnswer: "Coldline",
+                feedback: {
+                    "Coldline": "Correct! Coldline offers low storage costs with reasonable retrieval speed, making it a good balance for DR backups."
+                }
+            },
+            {
+                title: "Q58: Data Processing for Stream Analytics",
+                description: "Your company has a system that generates real-time sensor data. You need to perform continuous, real-time analytics on this data to detect anomalies. Which Google Cloud service should you use for processing?",
+                options: ["Google Cloud Dataproc", "Google Cloud Dataflow", "Google Cloud Composer", "Google BigQuery"],
+                correctAnswer: "Google Cloud Dataflow",
+                feedback: {
+                    "Google Cloud Dataflow": "Correct! Dataflow is a fully managed service for scalable, real-time stream processing and analytics."
+                }
+            },
+            {
+                title: "Q59: Network Design for Service-to-Service Communication (Internal)",
+                description: "You are designing a microservices application on Google Kubernetes Engine (GKE). You need to enable secure and efficient communication between different microservices (pods) within the cluster. Which networking concept should you leverage?",
+                options: ["External Load Balancer", "Service Mesh", "Shared VPC", "Kubernetes Services"],
+                correctAnswer: "Kubernetes Services",
+                feedback: {
+                    "Kubernetes Services": "Correct! Kubernetes Services provide stable network endpoints and load balancing for pods, enabling reliable inter-service communication."
+                }
+            },
+            {
+                title: "Q60: Multi-Project Resource Organization",
+                description: "Your company wants to organize its Google Cloud resources (projects, billing, IAM) into a hierarchical structure for better management and policy enforcement. They have multiple departments, each with its own set of projects. Which resource hierarchy component should you establish at the top level?",
+                options: ["Folders", "Projects", "Organization", "Resource Groups"],
+                correctAnswer: "Organization",
+                feedback: {
+                    "Organization": "Correct! The Organization node is the root of the GCP resource hierarchy, providing centralized control over all resources."
+                }
+            }
+        ];
+
+        // --- State Management ---
+        let currentQuestionIndex = 0;
+        let userAnswers = new Array(quizData.length).fill(null);
+        let score = 0;
+
+        // --- DOM Elements ---
+        const mainHeader = document.getElementById('main-header');
+        const quizContainer = document.getElementById('quiz-container');
+        const navigationContainer = document.getElementById('navigation-container');
+        const resultsContainer = document.getElementById('results-container');
+        const reviewContainer = document.getElementById('review-container');
+        const reviewContent = document.getElementById('review-content');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const currentQSpan = document.getElementById('current-q-span');
+        const totalQSpan = document.getElementById('total-q-span');
+        const restartBtn = document.getElementById('restart-btn');
+        const reviewBtn = document.getElementById('review-btn');
+        const backToScoreBtn = document.getElementById('back-to-score-btn');
+        const scoreText = document.getElementById('score-text');
+        const scoreSummary = document.getElementById('score-summary');
+
+        // --- Functions ---
+
+        /**
+         * Renders the current question to the DOM.
+         */
+        function loadQuestion() {
+            const question = quizData[currentQuestionIndex];
+            const isAnswered = userAnswers[currentQuestionIndex] !== null;
+            const questionType = question.type || 'MULTIPLE_CHOICE';
+            
+            let optionsHtml = '';
+            question.options.forEach(option => {
+                let isSelected = false;
+                if (questionType === 'CHECKBOX') {
+                    isSelected = userAnswers[currentQuestionIndex] && userAnswers[currentQuestionIndex].includes(option);
+                } else {
+                    isSelected = userAnswers[currentQuestionIndex] === option;
+                }
+
+                optionsHtml += `
+                    <div class="quiz-option mt-4 p-4 border-2 border-slate-200 rounded-lg flex items-center bg-slate-50 hover:bg-slate-100" data-option="${option}">
+                        <input type="${questionType === 'CHECKBOX' ? 'checkbox' : 'radio'}" name="option" class="mr-4 pointer-events-none h-5 w-5 text-indigo-600 border-gray-300 focus:ring-indigo-500" ${isSelected ? 'checked' : ''} ${isAnswered ? 'disabled' : ''}>
+                        <label class="flex-1 pointer-events-none text-slate-700">${option}</label>
+                    </div>
+                `;
+            });
+
+            quizContainer.innerHTML = `
+                <div class="mb-4">
+                    <h2 class="text-2xl font-bold text-slate-900">${question.title}</h2>
+                    <p class="text-slate-600 mt-2">${question.description}</p>
+                </div>
+                <div id="options-container" class="${isAnswered ? 'answered' : ''}">
+                    ${optionsHtml}
+                </div>
+                <div id="feedback-container"></div>
+                ${questionType === 'CHECKBOX' && !isAnswered ? '<button id="submit-btn" class="btn mt-6 w-full bg-indigo-600 text-white font-bold py-3 px-4 rounded-lg hover:bg-indigo-700 shadow-md">Submit Answer</button>' : ''}
+            `;
+            
+            updateProgress();
+            updateButtonStates();
+            
+            if (isAnswered) {
+                showFeedback();
+            }
+
+            addOptionListeners();
+        }
+
+        /**
+         * Adds click listeners to the current question's options.
+         */
+        function addOptionListeners() {
+            const question = quizData[currentQuestionIndex];
+            const questionType = question.type || 'MULTIPLE_CHOICE';
+
+            document.querySelectorAll('.quiz-option').forEach(optionEl => {
+                optionEl.addEventListener('click', (e) => {
+                    if (userAnswers[currentQuestionIndex] !== null) return; // Already answered
+
+                    if (questionType === 'MULTIPLE_CHOICE') {
+                        const selectedOption = optionEl.dataset.option;
+                        userAnswers[currentQuestionIndex] = selectedOption;
+                        showFeedback();
+                    } else { // CHECKBOX
+                        const checkbox = e.currentTarget.querySelector('input');
+                        checkbox.checked = !checkbox.checked;
+                    }
+                });
+            });
+
+            if (questionType === 'CHECKBOX') {
+                const submitBtn = document.getElementById('submit-btn');
+                if (submitBtn) {
+                    submitBtn.addEventListener('click', () => {
+                        const selectedOptions = Array.from(document.querySelectorAll('.quiz-option input:checked')).map(input => input.parentElement.dataset.option);
+                        userAnswers[currentQuestionIndex] = selectedOptions;
+                        showFeedback();
+                        submitBtn.classList.add('hidden');
+                    });
+                }
+            }
+        }
+
+        /**
+         * Displays feedback for the current question after an answer is submitted.
+         */
+        function showFeedback() {
+            const question = quizData[currentQuestionIndex];
+            const userAnswer = userAnswers[currentQuestionIndex];
+            const optionsContainer = document.getElementById('options-container');
+            const feedbackContainer = document.getElementById('feedback-container');
+            
+            if (!optionsContainer) return;
+
+            optionsContainer.classList.add('answered');
+            optionsContainer.querySelectorAll('input').forEach(input => input.disabled = true);
+
+            let isCorrect = false;
+            let feedbackHtml = '';
+
+            if (question.type === 'CHECKBOX') {
+                const correctAnswers = new Set(question.correctAnswers);
+                const selectedAnswers = new Set(userAnswer || []);
+                isCorrect = correctAnswers.size === selectedAnswers.size && [...correctAnswers].every(val => selectedAnswers.has(val));
+                
+                feedbackHtml = Object.entries(question.feedback)
+                    .filter(([option, text]) => correctAnswers.has(option))
+                    .map(([option, text]) => `<p class="mt-2 text-sm">${text}</p>`)
+                    .join('');
+
+            } else {
+                isCorrect = userAnswer === question.correctAnswer;
+                feedbackHtml = `<p class="mt-2 text-sm">${question.feedback[question.correctAnswer] || 'The correct answer is highlighted above.'}</p>`;
+            }
+
+            // Apply styling to options
+            document.querySelectorAll('.quiz-option').forEach(optionEl => {
+                const optionText = optionEl.dataset.option;
+                if (question.type === 'CHECKBOX') {
+                    if (question.correctAnswers.includes(optionText)) {
+                        optionEl.classList.add('correct');
+                    }
+                    if ((userAnswer || []).includes(optionText) && !question.correctAnswers.includes(optionText)) {
+                         optionEl.classList.add('incorrect');
+                    }
+                } else {
+                    if (optionText === question.correctAnswer) {
+                        optionEl.classList.add('correct');
+                    } else if (optionText === userAnswer) {
+                        optionEl.classList.add('incorrect');
+                    }
+                }
+            });
+
+            const feedbackColor = isCorrect ? 'bg-green-100 border-green-500' : 'bg-red-100 border-red-500';
+            const feedbackTitle = isCorrect ? '🎉 Correct! 🎉' : '🤔 Not Quite...';
+            
+            feedbackContainer.innerHTML = `
+                <div class="feedback-card p-4 border-l-4 rounded-r-lg ${feedbackColor}">
+                    <h3 class="font-bold text-lg">${feedbackTitle}</h3>
+                    ${feedbackHtml}
+                </div>
+            `;
+            setTimeout(() => {
+                const card = document.querySelector('.feedback-card');
+                if(card) card.classList.add('show');
+            }, 10);
+        }
+
+        function updateProgress() {
+            currentQSpan.textContent = currentQuestionIndex + 1;
+            totalQSpan.textContent = quizData.length;
+        }
+
+        function updateButtonStates() {
+            prevBtn.disabled = currentQuestionIndex === 0;
+            if (currentQuestionIndex === quizData.length - 1) {
+                nextBtn.textContent = 'Finish Quiz';
+            } else {
+                nextBtn.textContent = 'Next';
+            }
+        }
+
+        function showResults() {
+            score = 0;
+            quizData.forEach((question, index) => {
+                const userAnswer = userAnswers[index];
+                if (question.type === 'CHECKBOX') {
+                    const correctAnswers = new Set(question.correctAnswers);
+                    const selectedAnswers = new Set(userAnswer || []);
+                    if (correctAnswers.size === selectedAnswers.size && [...correctAnswers].every(val => selectedAnswers.has(val))) {
+                        score++;
+                    }
+                } else {
+                    if (userAnswer === question.correctAnswer) {
+                        score++;
+                    }
+                }
+            });
+
+            const percentage = Math.round((score / quizData.length) * 100);
+            scoreText.textContent = `${percentage}%`;
+            scoreSummary.textContent = `You answered ${score} out of ${quizData.length} questions correctly.`;
+
+            quizContainer.classList.add('hidden');
+            navigationContainer.classList.add('hidden');
+            mainHeader.classList.add('hidden');
+            resultsContainer.classList.remove('hidden');
+        }
+
+        function showReview() {
+            resultsContainer.classList.add('hidden');
+            reviewContainer.classList.remove('hidden');
+            
+            let reviewHtml = '';
+            quizData.forEach((question, index) => {
+                const userAnswer = userAnswers[index];
+                let isCorrect = false;
+                let userAnswerHtml = '';
+                let correctAnswerHtml = '';
+
+                if (question.type === 'CHECKBOX') {
+                    const correctAnswers = new Set(question.correctAnswers);
+                    const selectedAnswers = new Set(userAnswer || []);
+                    isCorrect = correctAnswers.size === selectedAnswers.size && [...correctAnswers].every(val => selectedAnswers.has(val));
+                    userAnswerHtml = (userAnswer || []).length > 0 ? (userAnswer || []).map(a => `<li>${a}</li>`).join('') : '<li>No answer</li>';
+                    correctAnswerHtml = question.correctAnswers.map(a => `<li>${a}</li>`).join('');
+                } else {
+                    isCorrect = userAnswer === question.correctAnswer;
+                    userAnswerHtml = `<li>${userAnswer || 'No answer'}</li>`;
+                    correctAnswerHtml = `<li>${question.correctAnswer}</li>`;
+                }
+                
+                const resultIcon = isCorrect 
+                    ? `<span class="text-green-500 font-bold ml-2">✔ Correct</span>` 
+                    : `<span class="text-red-500 font-bold ml-2">✖ Incorrect</span>`;
+
+                reviewHtml += `
+                    <div class="border-t border-slate-200 pt-4">
+                        <p class="font-semibold text-lg">${question.title}${resultIcon}</p>
+                        <div class="text-sm mt-2 grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <p class="font-bold mb-1">Your Answer:</p>
+                                <ul class="list-disc list-inside ${isCorrect ? 'review-answer-correct' : 'review-answer-incorrect'}">${userAnswerHtml}</ul>
+                            </div>
+                            ${!isCorrect ? `<div>
+                                <p class="font-bold mb-1">Correct Answer:</p>
+                                <ul class="list-disc list-inside review-answer-correct">${correctAnswerHtml}</ul>
+                            </div>` : ''}
+                        </div>
+                    </div>
+                `;
+            });
+            reviewContent.innerHTML = reviewHtml;
+        }
+
+        function restartQuiz() {
+             currentQuestionIndex = 0;
+             userAnswers.fill(null);
+             score = 0;
+             
+             resultsContainer.classList.add('hidden');
+             reviewContainer.classList.add('hidden');
+             quizContainer.classList.remove('hidden');
+             navigationContainer.classList.remove('hidden');
+             mainHeader.classList.remove('hidden');
+             
+             loadQuestion();
+        }
+
+        // --- Event Listeners ---
+        prevBtn.addEventListener('click', () => {
+            if (currentQuestionIndex > 0) {
+                currentQuestionIndex--;
+                loadQuestion();
+            }
+        });
+
+        nextBtn.addEventListener('click', () => {
+            if (userAnswers[currentQuestionIndex] === null) {
+                if (!quizData[currentQuestionIndex].type || quizData[currentQuestionIndex].type === 'MULTIPLE_CHOICE') {
+                    userAnswers[currentQuestionIndex] = ''; 
+                } else {
+                     userAnswers[currentQuestionIndex] = []; // For checkbox if skipped
+                }
+            }
+
+            if (currentQuestionIndex < quizData.length - 1) {
+                currentQuestionIndex++;
+                loadQuestion();
+            } else {
+                showResults();
+            }
+        });
+        
+        restartBtn.addEventListener('click', restartQuiz);
+        reviewBtn.addEventListener('click', showReview);
+        backToScoreBtn.addEventListener('click', () => {
+            reviewContainer.classList.add('hidden');
+            resultsContainer.classList.remove('hidden');
+        });
+
+        // --- Initial Load ---
+        document.addEventListener('DOMContentLoaded', () => {
+            loadQuestion();
+        });
+    </script>
+</body>
+</html>
