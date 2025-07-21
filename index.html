@@ -71,7 +71,16 @@
     <div class="container mx-auto p-4 sm:p-6 lg:p-8 max-w-4xl">
         <!-- Header -->
         <header id="main-header" class="text-center mb-8">
-            <h1 class="text-3xl sm:text-4xl font-extrabold text-slate-900">☁️ GCP Architect Quiz 🧠</h1>
+            <h1 class="text-3xl sm:text-4xl font-extrabold text-slate-900 flex items-center justify-center">
+                <span class="inline-block align-middle w-10 h-10 mr-3">
+                    <svg viewBox="0 0 108 72" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M85.333 29.333c-2.07-12.2-12.72-21.333-25.333-21.333-8.107 0-15.307 3.84-19.893 9.76C37.333 17.013 33.813 16 30 16c-8.827 0-16 7.173-16 16 0 .613.053.933.16.1.213-3.947 3.52-7.1 7.547-7.1h1.76c.693 0 1.333.32 1.76.853.48-5.387 5.12-9.547 10.773-9.547 6.187 0 11.2 4.907 11.307 11.093.053.853.747 1.547 1.6 1.547h.427c5.44 0 9.866 4.427 9.866 9.867 0 5.173-4.053 9.493-9.28 9.813H37.333c-6.627 0-12 5.373-12 12s5.373 12 12 12h48c9.707 0 17.333-7.947 17.333-17.333 0-9.28-7.253-16.853-16.333-17.333z" fill="#4285F4"/>
+                        <path d="M37.333 53.333c-2.293 0-4.373-1.013-5.813-2.613-1.494-1.6-2.454-3.84-2.454-6.054 0-4.906 3.947-8.853 8.854-8.853h48c4.906 0 8.853 3.947 8.853 8.853 0 4.907-3.947 8.854-8.853 8.854H37.333z" fill="#1A73E8"/>
+                        <path d="M30 23c-4.97 0-9 4.03-9 9s4.03 9 9 9h6.667c.107-1.386.427-2.72.96-4-1.813-.64-3.093-2.4-3.093-4.453 0-2.614 2.133-4.747 4.747-4.747h1.066c.214-3.84 3.467-6.8 7.334-6.8 3.413 0 6.346 2.347 7.146 5.493C55.467 25.12 56.693 24 58 24c3.307 0 6 2.693 6 6 0 .693-.107 1.333-.32 1.973.853.213 1.6.64 2.24 1.173-1.493-4.48-5.653-7.813-10.587-7.813-4.213 0-7.946 2.56-9.653 6.24C44.427 26.133 40.853 23 36.667 23H30z" fill="#E8F0FE"/>
+                    </svg>
+                </span>
+                GCP Architect Quiz 🧠
+            </h1>
             <p class="text-slate-600 mt-2 text-lg">Test your knowledge and prepare for certification!</p>
         </header>
 
@@ -134,6 +143,9 @@
               ],
               correctAnswer: "Use separate backend pools for each API path behind the load balancer",
               feedback: {
+                "Configure a new load balancer": "Incorrect. This would likely require new DNS/SSL records.",
+                "Reconfigure old clients": "Incorrect. This would disrupt existing clients and is not a good practice for API versioning.",
+                "Have the old API forward traffic to the new API based on the path": "Incorrect. This approach is risky and tightly couples the two API versions.",
                 "Use separate backend pools for each API path behind the load balancer": "Correct! An HTTP(S) Load Balancer can use path-based routing (e.g., /v1/*, /v2/*) to direct traffic to different backends. This is the standard way to manage API versions under a single domain."
               }
             },
@@ -148,7 +160,10 @@
               ],
               correctAnswer: "Load data into Google BigQuery",
               feedback: {
-                "Load data into Google BigQuery": "Correct! BigQuery is a serverless, highly scalable data warehouse designed for running SQL queries on massive (petabyte-scale) datasets."
+                "Load data into Google BigQuery": "Correct! BigQuery is a serverless, highly scalable data warehouse designed for running SQL queries on massive (petabyte-scale) datasets.",
+                "Insert data into Google Cloud SQL": "Incorrect. Cloud SQL is a relational database service (OLTP) and is not designed for petabyte-scale analytics.",
+                "Put flat files into Google Cloud Storage": "Incorrect. While Cloud Storage is a good place to store the files, it does not offer a direct SQL interface for analysis.",
+                "Stream into Google Cloud Datastore": "Incorrect. Datastore is a NoSQL database and does not use a SQL interface."
               }
             },
             {
@@ -169,9 +184,12 @@
                 "Deploy a continuous integration tool with automated testing in a staging environment"
               ],
               feedback: {
+                "Port the application code to run on Google App Engine": "Incorrect. This is a specific re-platforming strategy, not a universal best practice for all initial migrations.",
+                "Integrate Cloud Dataflow into the application to capture real-time metrics": "Incorrect. Dataflow is for large-scale data processing, not application metrics. Cloud Monitoring is the appropriate tool.",
                 "Instrument the application with a monitoring tool like Stackdriver Debugger": "Correct! Gaining operational visibility through monitoring and debugging is a fundamental practice for any cloud application.",
                 "Select an automation framework to reliably provision the cloud infrastructure": "Correct! Using Infrastructure as Code (IaC) ensures consistent, repeatable, and automated provisioning of environments.",
-                "Deploy a continuous integration tool with automated testing in a staging environment": "Correct! Implementing CI/CD is essential for improving release velocity, quality, and reliability."
+                "Deploy a continuous integration tool with automated testing in a staging environment": "Correct! Implementing CI/CD is essential for improving release velocity, quality, and reliability.",
+                 "Migrate from MySQL to a managed NoSQL database like Google Cloud Datastore or Bigtable": "Incorrect. This represents a major database re-architecture and is not a typical initial practice for migration."
               }
             },
             {
@@ -185,7 +203,10 @@
                 ],
                 correctAnswer: "The session variable is local to just a single instance",
                 feedback: {
-                    "The session variable is local to just a single instance": "Correct! In a scaled environment like App Engine, each request from a user can be served by a different instance. Storing session state in instance memory means it is not shared, leading to inconsistent user experiences."
+                    "The session variable is local to just a single instance": "Correct! In a scaled environment like App Engine, each request from a user can be served by a different instance. Storing session state in instance memory means it is not shared, leading to inconsistent user experiences.",
+                    "The session variable is being overwritten in Cloud Datastore": "Incorrect. The problem description implies the session state is in a global variable, not stored in Datastore.",
+                    "The URL of the API needs to be modified to prevent caching": "Incorrect. This is an issue with server-side state management, not client-side caching.",
+                    "The HTTP Expires header needs to be set to -1 stop caching": "Incorrect. This is related to client-side caching, not server-side session state inconsistency."
                 }
             },
             {
@@ -199,7 +220,10 @@
                 ],
                 correctAnswer: "Help them define their requirements and assess viable logging tools",
                 feedback: {
-                    "Help them define their requirements and assess viable logging tools": "Correct! The essential first step in any solution design is to understand the requirements, constraints, and goals. This allows for a proper assessment of all viable options."
+                    "Direct them to download and install the Google StackDriver logging agent": "Incorrect. Recommending a specific tool without first understanding the requirements is a premature solution.",
+                    "Send them a list of online resources about logging best practices": "Incorrect. While helpful, this is passive and does not directly address their need to find a solution.",
+                    "Help them define their requirements and assess viable logging tools": "Correct! The essential first step in any solution design is to understand the requirements, constraints, and goals. This allows for a proper assessment of all viable options.",
+                    "Help them upgrade their current tool to take advantage of any new features": "Incorrect. This assumes their current tool is sufficient, which the team already believes is not the case."
                 }
             },
             {
@@ -213,6 +237,9 @@
                 ],
                 correctAnswer: "Use Compute Engine for each server, and set up a VPC Network and Firewall rules.",
                 feedback: {
+                    "Use Compute Engine for each server, and deploy a global load balancer.": "Incorrect. A global load balancer is for distributing external traffic, not for establishing basic internal connectivity between VMs.",
+                    "Use Compute Engine for each server, and deploy a Cloud VPN.": "Incorrect. A Cloud VPN is used to connect an on-premises network to a GCP VPC, not for connecting VMs within the same VPC.",
+                    "Use Compute Engine for each server, and create a firewall rule to allow traffic between VMs.": "Incorrect. While a firewall rule is needed, it must be created within a VPC Network. The VPC is the foundational networking component.",
                     "Use Compute Engine for each server, and set up a VPC Network and Firewall rules.": "Correct! VMs need to reside in a VPC to communicate. Firewall rules within that VPC are then used to control the specific traffic allowed between them."
                 }
             },
@@ -227,7 +254,10 @@
                 ],
                 correctAnswer: "Google Cloud Spanner",
                 feedback: {
-                    "Google Cloud Spanner": "Correct! Cloud Spanner is a globally distributed, relational database that provides strong ACID compliance, making it ideal for financial applications."
+                    "Google Cloud Datastore": "Incorrect. Datastore is a NoSQL database and does not offer the strong, global ACID compliance required for financial transactions.",
+                    "Google Cloud Bigtable": "Incorrect. Bigtable is a NoSQL wide-column store designed for high-throughput analytical and operational workloads, not for ACID transactions.",
+                    "Google Cloud Spanner": "Correct! Cloud Spanner is a globally distributed, relational database that provides strong ACID compliance, making it ideal for financial applications.",
+                    "Google Cloud Firestore in Native Mode": "Incorrect. Firestore is a NoSQL document database and does not provide the strong consistency guarantees of Spanner."
                 }
             },
             {
@@ -241,7 +271,10 @@
                 ],
                 correctAnswer: "Create a custom VM image that includes all required configurations and software.",
                 feedback: {
-                    "Create a custom VM image that includes all required configurations and software.": "Correct! 'Golden images' ensure consistent, fast, pre-configured deployments."
+                    "Write a custom deployment script and run it manually on each VM.": "Incorrect. This is manual, error-prone, and not efficient for a large number of VMs.",
+                    "Use a startup script on each VM to configure it after deployment.": "Incorrect. While startup scripts can work, they add to the boot time of each VM. A custom image is more efficient as the software is pre-installed.",
+                    "Create a custom VM image that includes all required configurations and software.": "Correct! Creating a 'golden image' ensures that every VM is deployed with the exact same configuration and software, leading to consistency and faster startup times.",
+                    "Develop a Kubernetes Deployment to manage the VM configuration.": "Incorrect. Kubernetes is used for orchestrating containers, not for managing the configuration of individual VMs."
                 }
             },
             {
@@ -255,7 +288,10 @@
                 ],
                 correctAnswer: "Configure an HTTP(S) Load Balancer in front of the managed instance groups.",
                 feedback: {
-                    "Configure an HTTP(S) Load Balancer in front of the managed instance groups.": "Correct! This provides external traffic distribution and auto-failover across zones."
+                    "Configure a regional managed instance group with autoscaling.": "Incorrect. A regional MIG is a key component, but it doesn't handle distributing traffic from external users.",
+                    "Configure an HTTP(S) Load Balancer in front of the managed instance groups.": "Correct! The load balancer provides a single entry point for traffic and will automatically distribute it to healthy instances in the available zones, bypassing any unavailable zone.",
+                    "Configure a health check on the managed instance groups and a Load Balancer.": "Incorrect. Health checks are a necessary part of the solution, but they are a feature of the load balancer and MIG, not the entire solution itself.",
+                    "Configure the application with an internal load balancer across multiple zones.": "Incorrect. An internal load balancer is for traffic within your VPC, not for external traffic to a web application."
                 }
             },
             {
@@ -269,7 +305,10 @@
                 ],
                 correctAnswer: "Google Cloud Spanner",
                 feedback: {
-                    "Google Cloud Spanner": "Correct! Spanner provides global strong ACID, and auditing can be built via logs."
+                    "Google Cloud Datastore": "Incorrect. Lacks strong ACID compliance.",
+                    "Google Cloud Bigtable": "Incorrect. NoSQL database not designed for ACID transactions.",
+                    "Google Cloud Spanner": "Correct! Spanner provides strong, global ACID compliance, which is essential for financial transactions. Auditing can be implemented using features like audit logs or change streams.",
+                    "Google Cloud Firestore in Native Mode": "Incorrect. Lacks the strict consistency guarantees of Spanner."
                 }
             },
             {
@@ -283,7 +322,10 @@
                 ],
                 correctAnswer: "Google Cloud Storage (Standard storage class)",
                 feedback: {
-                    "Google Cloud Storage (Standard storage class)": "Correct! Cloud Storage is a scalable object store for unstructured data, suitable for flexible analysis."
+                    "Google Cloud Storage (Standard storage class)": "Correct! Cloud Storage is a scalable object store perfect for unstructured data. The Standard class is suitable for data that may be frequently accessed for analysis.",
+                    "Google Cloud Storage (Nearline storage class)": "Incorrect. Nearline is for data accessed less than once a month, which might be too slow or costly for active analysis.",
+                    "Google Cloud Filestore": "Incorrect. Filestore provides a managed file system (NFS), which is not as scalable or cost-effective for large-scale object storage as Cloud Storage.",
+                    "Google Cloud SQL": "Incorrect. Cloud SQL is a relational database and is not suitable for storing large, unstructured files."
                 }
             },
             {
@@ -297,7 +339,10 @@
                 ],
                 correctAnswer: "VPC Network",
                 feedback: {
-                    "VPC Network": "Correct! A VPC is the fundamental, isolated private network in GCP."
+                    "Shared VPC": "Incorrect. Shared VPC is a way to use a VPC across multiple projects, but the fundamental construct is the VPC Network itself.",
+                    "VPC Network": "Correct! A Virtual Private Cloud (VPC) Network is the foundational, logically isolated private network within GCP where you place your resources.",
+                    "Firewall Rules": "Incorrect. Firewall rules control traffic within a VPC; they do not create the network.",
+                    "VPN Gateway": "Incorrect. A VPN Gateway is a component used to connect an on-premises network to a VPC, but it is not the network itself."
                 }
             },
             {
@@ -311,7 +356,10 @@
                 ],
                 correctAnswer: "Preemptible instances",
                 feedback: {
-                    "Preemptible instances": "Correct! Preemptible VMs are significantly cheaper for fault-tolerant, interruptible workloads."
+                    "Standard instances": "Incorrect. These are the default and do not offer specific cost savings for interruptible workloads.",
+                    "Preemptible instances": "Correct! Preemptible VMs (PVMs) offer massive discounts (up to 80%) in exchange for the possibility of being shut down (preempted) by Google. They are perfect for fault-tolerant, non-critical batch jobs.",
+                    "Custom machine types": "Incorrect. While custom machine types can save money by right-sizing VMs, they don't offer the deep discounts of preemptible instances for this use case.",
+                    "Sole-tenant nodes": "Incorrect. These are more expensive and are used for compliance or licensing requirements that need dedicated hardware."
                 }
             },
             {
@@ -325,7 +373,10 @@
                 ],
                 correctAnswer: "Grant the roles/storage.objectViewer role to individual users",
                 feedback: {
-                    "Grant the roles/storage.objectViewer role to individual users": "Correct! This provides read-only access (least privilege) directly to the specific users who need it."
+                    "Make the bucket publicly readable": "Incorrect. This is highly insecure and exposes the sensitive data to everyone on the internet.",
+                    "Grant the roles/storage.objectViewer role to individual users": "Correct! This follows the principle of least privilege by granting only the necessary read-only permission (objectViewer) directly to the specific users who need it.",
+                    "Grant the roles/storage.admin role to the data science team's service account": "Incorrect. This grants full administrative control, which violates the principle of least privilege.",
+                    "Set up signed URLs for each object they need to access": "Incorrect. While signed URLs are secure, they are impractical for granting ongoing access to a whole bucket for a team. They are better for temporary, programmatic access to specific objects."
                 }
             },
             {
@@ -339,7 +390,10 @@
                 ],
                 correctAnswer: "Google Cloud Bigtable",
                 feedback: {
-                    "Google Cloud Bigtable": "Correct! Bigtable is optimized for massive, high-throughput time-series data ingestion."
+                    "Google Cloud SQL": "Incorrect. A relational database like Cloud SQL is not designed to handle the massive write throughput of millions of IoT devices.",
+                    "Google Cloud Spanner": "Incorrect. Spanner is for transactional consistency (ACID), not for the raw, high-throughput ingestion of time-series data.",
+                    "Google Cloud Bigtable": "Correct! Bigtable is a NoSQL wide-column store specifically designed for large-scale, low-latency workloads, making it perfect for ingesting and analyzing high-throughput time-series and IoT data.",
+                    "Google Cloud Datastore": "Incorrect. Datastore is a document database for application data and does not scale to the level required for millions of IoT devices."
                 }
             },
             {
@@ -353,7 +407,10 @@
                 ],
                 correctAnswer: "Use Transfer Appliance to transfer the data.",
                 feedback: {
-                    "Use Transfer Appliance to transfer the data.": "Correct! A physical appliance bypasses unreliable internet for petabyte-scale transfers."
+                    "Use gsutil rsync to synchronize data to Cloud Storage.": "Incorrect. This relies on the slow and unreliable internet connection and would take an extremely long time.",
+                    "Use Transfer Appliance to transfer the data.": "Correct! For petabyte-scale transfers with poor network connectivity, the physical Transfer Appliance allows you to ship the data directly to Google for ingestion, bypassing the network.",
+                    "Use Storage Transfer Service to transfer the data.": "Incorrect. This service is for transferring data from other cloud providers or online sources and still relies on network connectivity.",
+                    "Use a Direct Peering connection to transfer the data.": "Incorrect. Peering is for network traffic exchange, not a solution for a one-time bulk data transfer with an unreliable link."
                 }
             },
             {
@@ -367,7 +424,10 @@
                 ],
                 correctAnswer: "Kubernetes Secrets for sensitive data, and ConfigMaps for non-sensitive data.",
                 feedback: {
-                    "Kubernetes Secrets for sensitive data, and ConfigMaps for non-sensitive data.": "Correct! These are the standard K8s objects for secure and dynamic configuration."
+                    "Kubernetes Secrets for sensitive data, and ConfigMaps for non-sensitive data.": "Correct! This is the standard, native Kubernetes way to manage configuration. Secrets are for sensitive data, and ConfigMaps are for non-sensitive configuration, both of which can be updated independently of the application pods.",
+                    "Store all configurations as environment variables directly in the Deployment manifest.": "Incorrect. This is insecure for sensitive data and inflexible, as it requires a redeployment to change any configuration.",
+                    "Store all configurations in a Cloud Storage bucket and retrieve them at runtime.": "Incorrect. This requires custom logic within the application and is less integrated than using native Kubernetes objects.",
+                    "Use a custom solution to store and inject configurations into pods.": "Incorrect. It's almost always better to use the standard, built-in solution rather than creating a custom one."
                 }
             },
             {
@@ -381,7 +441,10 @@
                 ],
                 correctAnswer: "Google Kubernetes Engine (GKE)",
                 feedback: {
-                    "Google Kubernetes Engine (GKE)": "Correct! GKE is the industry standard for containerized microservices orchestration, offering native scaling, service discovery, and load balancing."
+                    "Google Compute Engine": "Incorrect. This provides raw VMs and requires you to manually set up and manage all the orchestration for microservices.",
+                    "Google Kubernetes Engine (GKE)": "Correct! GKE is the industry-standard container orchestration platform, designed specifically to run, manage, and scale microservices with built-in features for service discovery, load balancing, and autoscaling.",
+                    "Google App Engine Standard": "Incorrect. While App Engine supports services, it is more opinionated and offers less flexibility for complex microservices architectures compared to GKE.",
+                    "Google Cloud Functions": "Incorrect. This is for serverless functions (FaaS), not for orchestrating a complex system of long-running microservices."
                 }
             },
             {
@@ -395,7 +458,10 @@
                 ],
                 correctAnswer: "Configure High Availability (HA) with cross-region replication.",
                 feedback: {
-                    "Configure High Availability (HA) with cross-region replication.": "Correct! This configuration provides a synchronous standby for near-zero RPO and an RTO in minutes."
+                    "Enable automated daily backups.": "Incorrect. This results in a high RPO (up to 24 hours of data loss) and a high RTO (time to restore the backup).",
+                    "Configure Point-in-Time Recovery.": "Incorrect. This helps reduce RPO but still involves a manual restoration process, leading to a higher RTO.",
+                    "Set up a read replica in a different region.": "Incorrect. A standard read replica has asynchronous replication, which means there can be some data loss (non-zero RPO). Failover is also typically a manual process.",
+                    "Configure High Availability (HA) with cross-region replication.": "Correct! Cloud SQL's HA configuration with cross-region replication provides a synchronous standby instance in another region, enabling automatic failover with near-zero RPO and an RTO of minutes."
                 }
             },
             {
@@ -409,7 +475,10 @@
                 ],
                 correctAnswer: "Direction: Ingress, Source IP ranges: 192.168.1.0/24, Protocols and ports: tcp:80",
                 feedback: {
-                    "Direction: Ingress, Source IP ranges: 192.168.1.0/24, Protocols and ports: tcp:80": "Correct! Ingress is for incoming traffic, and Source specifies the origin."
+                    "Direction: Egress, Source IP ranges: 192.168.1.0/24, Protocols and ports: tcp:80": "Incorrect. Egress means outgoing traffic.",
+                    "Direction: Ingress, Source IP ranges: 192.168.1.0/24, Protocols and ports: tcp:80": "Correct! Ingress means incoming traffic, and 'Source IP ranges' specifies where the traffic is allowed to originate from.",
+                    "Direction: Egress, Destination IP ranges: 192.168.1.0/24, Protocols and ports: tcp:80": "Incorrect. Egress means outgoing traffic.",
+                    "Direction: Ingress, Destination IP ranges: 192.168.1.0/24, Protocols and ports: tcp:80": "Incorrect. 'Destination IP ranges' is used for Egress rules to specify where traffic can go."
                 }
             },
             {
@@ -418,7 +487,10 @@
                 options: ["Standard", "Nearline", "Coldline", "Archive"],
                 correctAnswer: "Archive",
                 feedback: {
-                    "Archive": "Correct! Archive is the most cost-effective for data accessed less than once a year with long-term retention needs."
+                    "Standard": "Incorrect. Too expensive for data that is rarely accessed.",
+                    "Nearline": "Incorrect. Optimized for data accessed about once a month.",
+                    "Coldline": "Incorrect. Optimized for data accessed about once a quarter.",
+                    "Archive": "Correct! Archive storage is the most cost-effective option for long-term (years) retention of data that is accessed less than once a year."
                 }
             },
             {
@@ -427,7 +499,10 @@
                 options: ["Google App Engine", "Google Kubernetes Engine", "Google Cloud Functions", "Google Compute Engine"],
                 correctAnswer: "Google Cloud Functions",
                 feedback: {
-                    "Google Cloud Functions": "Correct! Cloud Functions is a fully managed, serverless FaaS platform ideal for event-driven, short-lived logic."
+                    "Google App Engine": "Incorrect. This is a Platform-as-a-Service (PaaS) for running full applications, not for small, event-driven pieces of logic.",
+                    "Google Kubernetes Engine": "Incorrect. This is a container orchestration platform and involves more operational overhead than a serverless functions platform.",
+                    "Google Cloud Functions": "Correct! This is a Function-as-a-Service (FaaS) platform, perfect for running small, event-driven code snippets in a fully managed, serverless environment.",
+                    "Google Compute Engine": "Incorrect. This provides raw VMs (IaaS) and requires the most operational management."
                 }
             },
             {
@@ -441,7 +516,10 @@
                 ],
                 correctAnswer: "Use Kubernetes Secrets.",
                 feedback: {
-                    "Use Kubernetes Secrets.": "Correct! This is the native, secure Kubernetes method to store and inject sensitive data into pods."
+                    "Store secrets directly in Docker images.": "Incorrect. This is highly insecure as anyone with access to the image can extract the secrets.",
+                    "Use Kubernetes Secrets.": "Correct! Kubernetes Secrets are the native, secure, and standard way to store and manage sensitive information and make it available to pods.",
+                    "Mount secrets from a Cloud Storage bucket.": "Incorrect. This requires custom logic and managing IAM permissions, making it less integrated and more complex than using native Secrets.",
+                    "Hardcode secrets in application code.": "Incorrect. This is extremely insecure and makes rotating secrets very difficult."
                 }
             },
             {
@@ -450,7 +528,10 @@
                 options: ["Google Cloud Spanner", "Google Cloud Bigtable", "Google Cloud SQL", "Google Cloud Datastore"],
                 correctAnswer: "Google Cloud SQL",
                 feedback: {
-                    "Google Cloud SQL": "Correct! Cloud SQL is a fully managed relational DB service supporting PostgreSQL, enabling minimal changes (re-hosting)."
+                    "Google Cloud Spanner": "Incorrect. Spanner is a globally distributed relational database, but migrating to it from a traditional RDBMS like PostgreSQL often requires schema and application code changes.",
+                    "Google Cloud Bigtable": "Incorrect. This is a NoSQL database.",
+                    "Google Cloud SQL": "Correct! Cloud SQL provides fully managed instances of common relational databases like PostgreSQL, MySQL, and SQL Server, making it ideal for a 'lift-and-shift' migration with minimal changes.",
+                    "Google Cloud Datastore": "Incorrect. This is a NoSQL database."
                 }
             },
             {
@@ -464,7 +545,10 @@
                 ],
                 correctAnswer: "Deploy a Global Load Balancer in front of the VMs.",
                 feedback: {
-                    "Deploy a Global Load Balancer in front of the VMs.": "Correct! A Global Load Balancer provides a single, global entry point, routing users to the closest healthy backend for lower latency via Google's edge network."
+                    "Deploy a Global Load Balancer in front of the VMs.": "Correct! A global external HTTP(S) load balancer uses Google's premium network tier and global edge locations to route users to the closest healthy backend, significantly reducing latency.",
+                    "Use a Cloud VPN connection.": "Incorrect. VPN is for securing traffic between on-premises and GCP, not for optimizing public internet traffic.",
+                    "Increase the network bandwidth of the VMs.": "Incorrect. This might help if the VM itself is the bottleneck, but it won't improve the latency of the network path from the user to the VM.",
+                    "Enable VPC Service Controls.": "Incorrect. This is a security feature to prevent data exfiltration, not a performance optimization tool."
                 }
             },
             {
@@ -478,7 +562,10 @@
                 ],
                 correctAnswer: "Cloud Logging for ingestion and storage, and BigQuery for analytical queries.",
                 feedback: {
-                    "Cloud Logging for ingestion and storage, and BigQuery for analytical queries.": "Correct! Cloud Logging handles high-volume ingestion/storage, and BigQuery is ideal for scalable analytical queries on logs."
+                    "Cloud Storage for logs, and Cloud SQL for queries.": "Incorrect. Cloud SQL is not designed for scalable analysis of high-volume log data.",
+                    "Cloud Logging for ingestion and storage, and BigQuery for analytical queries.": "Correct! This is the standard GCP pattern. Cloud Logging handles the ingestion and storage, and you can create a sink to export logs to BigQuery for powerful, scalable SQL-based analysis.",
+                    "Cloud Datastore for logs, and Cloud Functions for queries.": "Incorrect. This solution is not scalable for high-volume log analysis.",
+                    "Cloud Bigtable for logs, and Dataflow for queries.": "Incorrect. While Bigtable can store logs, BigQuery is the superior tool for ad-hoc analytical querying. Dataflow is for data processing, not querying."
                 }
             },
             {
@@ -487,7 +574,10 @@
                 options: ["Service Accounts", "Custom Roles", "Organizations and Folders", "Project IAM policies"],
                 correctAnswer: "Organizations and Folders",
                 feedback: {
-                    "Organizations and Folders": "Correct! This provides a central hierarchy to manage and apply consistent IAM policies across multiple projects."
+                    "Service Accounts": "Incorrect. Service accounts are for applications, not for managing human user access across projects.",
+                    "Custom Roles": "Incorrect. Custom roles define sets of permissions, but they don't provide a way to apply those permissions hierarchically across many projects.",
+                    "Organizations and Folders": "Correct! The resource hierarchy (Organization > Folders > Projects) allows you to set IAM policies at higher levels (like a folder for the 'Development' team) that are inherited by all projects within, enabling centralized and consistent access management.",
+                    "Project IAM policies": "Incorrect. This manages access on a per-project basis, which is not centralized or efficient for many projects."
                 }
             },
             {
@@ -501,7 +591,10 @@
                 ],
                 correctAnswer: "Store state in an external, highly available database service.",
                 feedback: {
-                    "Store state in an external, highly available database service.": "Correct! Externalizing state to a managed, HA database ensures persistence and quick recovery across failures."
+                    "Store state in local disk and use persistent disk snapshots for backup.": "Incorrect. This leads to a high recovery time (RTO) as you would need to restore a snapshot to a new disk, which is not suitable for quick failover.",
+                    "Store state in an external, highly available database service.": "Correct! Externalizing state to a managed, multi-zone service (like multi-region Cloud SQL or Cloud Spanner) allows any application instance to access the state, making the application itself stateless and enabling quick failover.",
+                    "Store state in a distributed cache like Redis and replicate it.": "Incorrect. While a cache (like Memorystore) is often part of the solution for performance, a database provides stronger durability guarantees for critical state.",
+                    "Store state in a Google Cloud Storage bucket.": "Incorrect. Cloud Storage is object storage and is not suitable for the low-latency read/write operations required for live application state."
                 }
             },
             {
@@ -510,7 +603,10 @@
                 options: ["Cloud VPN", "Direct Peering", "Partner Interconnect", "Dedicated Interconnect"],
                 correctAnswer: "Dedicated Interconnect",
                 feedback: {
-                    "Dedicated Interconnect": "Correct! This provides a direct, private physical connection with the highest bandwidth and lowest latency for mission-critical hybrid needs."
+                    "Cloud VPN": "Incorrect. Cloud VPN operates over the public internet and cannot guarantee the high bandwidth or low latency required for mission-critical applications.",
+                    "Direct Peering": "Incorrect. Direct Peering is for reaching Google's public services, not for private access to your VPC.",
+                    "Partner Interconnect": "Incorrect. This provides a private connection through a partner, which is a good option, but Dedicated Interconnect offers the highest bandwidth and lowest latency.",
+                    "Dedicated Interconnect": "Correct! This provides a direct, private, physical connection between your data center and Google's network, offering the highest bandwidth (10 or 100 Gbps), lowest latency, and greatest reliability."
                 }
             },
             {
@@ -519,7 +615,10 @@
                 options: ["Google App Engine", "Google Kubernetes Engine (GKE)", "Google Cloud Functions", "Google Compute Engine"],
                 correctAnswer: "Google Kubernetes Engine (GKE)",
                 feedback: {
-                    "Google Kubernetes Engine (GKE)": "Correct! GKE allows 'lift-and-shift' of monoliths into containers with minimal refactoring, gaining Kubernetes orchestration benefits."
+                    "Google App Engine": "Incorrect. Migrating a complex monolith to App Engine often requires significant refactoring to fit its specific structure.",
+                    "Google Kubernetes Engine (GKE)": "Correct! You can containerize a monolithic application and deploy it to GKE with minimal changes. This 'lift-and-shift' approach provides immediate benefits like orchestration and portability, serving as a first step before potential refactoring into microservices.",
+                    "Google Cloud Functions": "Incorrect. This is for functions, not for running a large monolithic application.",
+                    "Google Compute Engine": "Incorrect. This is just moving from on-prem VMs to cloud VMs, which doesn't provide the desired containerization benefits."
                 }
             },
             {
@@ -533,7 +632,10 @@
                 ],
                 correctAnswer: "Implement mTLS (mutual TLS) using a service mesh like Istio.",
                 feedback: {
-                    "Implement mTLS (mutual TLS) using a service mesh like Istio.": "Correct! A service mesh like Istio provides mTLS for robust encryption and authentication of internal service-to-service communication."
+                    "Use Network Policies to restrict traffic.": "Incorrect. Network Policies operate at Layer 3/4 (IP/port) to restrict which pods can communicate, but they do not encrypt the traffic or verify service identity at Layer 7.",
+                    "Implement mTLS (mutual TLS) using a service mesh like Istio.": "Correct! A service mesh provides mTLS, which encrypts all traffic between services and provides strong, identity-based authentication, ensuring that communication is both private and authorized.",
+                    "Configure firewall rules within the GKE cluster.": "Incorrect. GCP firewall rules operate at the VM (node) level, not at the fine-grained service-to-service level within a cluster.",
+                    "Use internal load balancing to encrypt traffic.": "Incorrect. An internal load balancer distributes traffic but does not inherently encrypt the communication between all microservices."
                 }
             },
             {
@@ -547,7 +649,10 @@
                 ],
                 correctAnswer: "Pub/Sub and Dataflow.",
                 feedback: {
-                    "Pub/Sub and Dataflow.": "Correct! Pub/Sub is for real-time ingestion, and Dataflow is for real-time stream processing (ETL) to a warehouse."
+                    "Cloud Storage and Dataflow.": "Incorrect. Cloud Storage is for batch data, not for ingesting real-time streams.",
+                    "Pub/Sub and Dataflow.": "Correct! This is the canonical GCP pattern for stream processing. Pub/Sub provides a scalable, real-time messaging service for ingestion, and Dataflow provides a powerful, managed platform for processing those streams.",
+                    "Cloud SQL and Dataproc.": "Incorrect. These services are primarily for transactional databases and batch processing, respectively, not real-time streaming.",
+                    "Cloud Bigtable and BigQuery.": "Incorrect. While these can be destinations for the data, they are not the ingestion and processing components."
                 }
             },
             {
@@ -556,7 +661,10 @@
                 options: ["Cloud Source Repositories", "Cloud Build", "Cloud Monitoring", "Cloud Trace"],
                 correctAnswer: "Cloud Monitoring",
                 feedback: {
-                    "Cloud Monitoring": "Correct! Cloud Monitoring is the primary service for collecting, visualizing, and alerting on metrics, logs, and uptime across GCP."
+                    "Cloud Source Repositories": "Incorrect. This is a source code repository (Git).",
+                    "Cloud Build": "Incorrect. This is a CI/CD service for building and testing code.",
+                    "Cloud Monitoring": "Correct! Cloud Monitoring (part of the Cloud Operations suite) is the centralized service for collecting and visualizing metrics, logs, and traces to provide comprehensive monitoring.",
+                    "Cloud Trace": "Incorrect. Cloud Trace is a component of the monitoring suite specifically for analyzing latency in distributed systems, but it is not the overall solution."
                 }
             },
             {
@@ -565,7 +673,10 @@
                 options: ["Standard", "Nearline", "Coldline", "Archive"],
                 correctAnswer: "Archive",
                 feedback: {
-                    "Archive": "Correct! Archive is the most cost-effective for long-term retention of data accessed less than once a year."
+                    "Standard": "Incorrect. This is the most expensive class, for frequently accessed data.",
+                    "Nearline": "Incorrect. For data accessed about once a month.",
+                    "Coldline": "Incorrect. For data accessed about once a quarter.",
+                    "Archive": "Correct! Archive storage has the lowest storage cost, making it ideal for long-term retention of data that is accessed very rarely."
                 }
             },
             {
@@ -579,7 +690,10 @@
                 ],
                 correctAnswer: "Instance templates and managed instance groups.",
                 feedback: {
-                    "Instance templates and managed instance groups.": "Correct! Instance templates define VM config, and Managed Instance Groups (MIGs) use them for auto-scaling and deployment."
+                    "Custom images and startup scripts.": "Incorrect. These are components but not the complete solution for automated deployment and scaling.",
+                    "Instance templates and managed instance groups.": "Correct! An instance template defines the configuration of the VMs. A managed instance group (MIG) uses that template to create, manage, and autoscale a group of identical VMs.",
+                    "Sole-tenant nodes and autoscaling.": "Incorrect. Sole-tenant nodes are for dedicated hardware, not a general-purpose scaling solution.",
+                    "Snapshots and instance templates.": "Incorrect. Snapshots are for disk backups, not for managing a fleet of active VMs."
                 }
             },
             {
@@ -588,7 +702,10 @@
                 options: ["Cloud Storage", "Cloud Logging", "BigQuery", "Cloud SQL"],
                 correctAnswer: "Cloud Logging",
                 feedback: {
-                    "Cloud Logging": "Correct! Cloud Logging (via Log Sinks/aggregated exports) centralizes and routes logs from multiple projects."
+                    "Cloud Storage": "Incorrect. Cloud Storage can be a destination (sink) for logs, but it is not the service that performs the collection and aggregation.",
+                    "Cloud Logging": "Correct! Cloud Logging is the centralized service for collecting, searching, and routing logs from all GCP services and projects. You can configure aggregated sinks to send logs from multiple projects to a single destination.",
+                    "BigQuery": "Incorrect. BigQuery is a destination for logs for long-term storage and analysis, not the collection service itself.",
+                    "Cloud SQL": "Incorrect. This is a relational database and is not suitable for high-volume log aggregation."
                 }
             },
             {
@@ -597,7 +714,10 @@
                 options: ["Cloud Storage", "Cloud Pub/Sub", "Cloud Bigtable", "Cloud SQL"],
                 correctAnswer: "Cloud Pub/Sub",
                 feedback: {
-                    "Cloud Pub/Sub": "Correct! Pub/Sub is a fully managed, real-time messaging service ideal for ingesting continuous data streams like clickstreams."
+                    "Cloud Storage": "Incorrect. Cloud Storage is for batch/file storage, not for real-time stream ingestion.",
+                    "Cloud Pub/Sub": "Correct! Pub/Sub is a fully managed, real-time messaging service designed to ingest continuous streams of data from many sources, making it ideal for clickstream data.",
+                    "Cloud Bigtable": "Incorrect. Bigtable can be a destination for the data, but Pub/Sub is the service used for the initial ingestion.",
+                    "Cloud SQL": "Incorrect. A relational database is not suitable for high-throughput, real-time stream ingestion."
                 }
             },
             {
@@ -606,7 +726,10 @@
                 options: ["Cloud Load Balancing", "API Gateway", "Cloud DNS", "Identity-Aware Proxy (IAP)"],
                 correctAnswer: "API Gateway",
                 feedback: {
-                    "API Gateway": "Correct! API Gateway is a fully managed service for creating, securing, and managing APIs with central control."
+                    "Cloud Load Balancing": "Incorrect. A load balancer distributes traffic but does not provide comprehensive API management features like authentication, rate limiting, and analytics.",
+                    "API Gateway": "Correct! API Gateway is a fully managed service that allows you to create, secure, and monitor APIs. It provides a single point of entry and handles tasks like authentication, rate limiting, and monitoring.",
+                    "Cloud DNS": "Incorrect. Cloud DNS is for managing domain names.",
+                    "Identity-Aware Proxy (IAP)": "Incorrect. IAP is for securing access to web applications and VMs, not for general-purpose API management."
                 }
             },
             {
@@ -615,7 +738,10 @@
                 options: ["Google Cloud SQL", "Google Cloud Spanner", "Google Cloud BigQuery", "Google Cloud Bigtable"],
                 correctAnswer: "Google Cloud BigQuery",
                 feedback: {
-                    "Google Cloud BigQuery": "Correct! BigQuery is a serverless, highly scalable enterprise data warehouse built for analytical queries on massive datasets."
+                    "Google Cloud SQL": "Incorrect. Cloud SQL is an OLTP database and is not designed for the scale and performance required for a data warehouse.",
+                    "Google Cloud Spanner": "Incorrect. Spanner is for globally distributed transactional workloads (OLTP), not for data warehousing (OLAP).",
+                    "Google Cloud BigQuery": "Correct! BigQuery is a serverless, highly scalable, and cost-effective enterprise data warehouse specifically designed for running analytical queries on massive datasets.",
+                    "Google Cloud Bigtable": "Incorrect. Bigtable is a NoSQL database, not a relational data warehouse."
                 }
             },
             {
@@ -629,7 +755,10 @@
                 ],
                 correctAnswer: "Cloud Source Repositories, Cloud Build, and Cloud Deploy.",
                 feedback: {
-                    "Cloud Source Repositories, Cloud Build, and Cloud Deploy.": "Correct! This combination is the native integrated CI/CD solution for GKE."
+                    "Cloud Source Repositories, Cloud Build, and Cloud Deploy.": "Correct! This combination provides a fully managed, native CI/CD pipeline on GCP: Cloud Source Repositories for code, Cloud Build for CI (build/test), and Cloud Deploy for CD to GKE.",
+                    "Cloud Source Repositories, Cloud Functions, and Cloud Run.": "Incorrect. Functions and Run are deployment targets, not CI/CD pipeline tools for GKE.",
+                    "Cloud Storage, Cloud Build, and Cloud Scheduler.": "Incorrect. Cloud Storage and Scheduler are not primary components of a CI/CD pipeline for GKE.",
+                    "Cloud Code, Cloud Build, and Compute Engine.": "Incorrect. Cloud Code is an IDE plugin, and Compute Engine is for VMs, not a complete CI/CD solution for GKE."
                 }
             },
             {
@@ -643,7 +772,10 @@
                 ],
                 correctAnswer: "Use a Lifecycle Management policy to transition data between storage classes.",
                 feedback: {
-                    "Use a Lifecycle Management policy to transition data between storage classes.": "Correct! Lifecycle Management automates cost optimization by moving objects to cheaper storage classes based on age or access patterns."
+                    "Use the Standard storage class for all data.": "Incorrect. This is not cost-effective for the data that is rarely accessed.",
+                    "Use a Lifecycle Management policy to transition data between storage classes.": "Correct! Lifecycle Management allows you to automatically transition objects to cheaper storage classes (e.g., Standard -> Nearline -> Coldline) based on their age, which is the perfect way to optimize costs for data with variable access patterns.",
+                    "Use the Archive storage class for all data.": "Incorrect. This would incur high retrieval costs and delays for the data that is accessed frequently.",
+                    "Use Nearline storage class for all data.": "Incorrect. This is not optimal for data that is either very frequently or very rarely accessed."
                 }
             },
             {
@@ -652,7 +784,10 @@
                 options: ["Google Cloud Dataflow", "Google Cloud Dataproc", "Google Compute Engine", "Google Kubernetes Engine"],
                 correctAnswer: "Google Cloud Dataproc",
                 feedback: {
-                    "Google Cloud Dataproc": "Correct! Dataproc is a fully managed service for running Apache Spark, Hadoop, and other big data clusters."
+                    "Google Cloud Dataflow": "Incorrect. Dataflow is for Apache Beam pipelines, not for running native Apache Spark jobs.",
+                    "Google Cloud Dataproc": "Correct! Dataproc is a fully managed service for running Apache Spark and Hadoop clusters, making it ideal for big data batch processing.",
+                    "Google Compute Engine": "Incorrect. This would require manually setting up and managing the Spark clusters, which is not a managed service.",
+                    "Google Kubernetes Engine": "Incorrect. While you can run Spark on Kubernetes, it requires more manual setup and management than Dataproc."
                 }
             },
             {
@@ -661,7 +796,10 @@
                 options: ["Network Tags", "Firewall Rules", "VPC Service Controls", "Service Accounts"],
                 correctAnswer: "Firewall Rules",
                 feedback: {
-                    "Firewall Rules": "Correct! VPC Firewall Rules control traffic to/from VM instances based on IPs, ports, and tags, allowing fine-grained control."
+                    "Network Tags": "Incorrect. Network tags are used to apply firewall rules to groups of VMs, but they are not the access control mechanism itself.",
+                    "Firewall Rules": "Correct! VPC Firewall Rules are the primary mechanism for controlling traffic to and from VM instances based on IP addresses, ports, and protocols, allowing for fine-grained, tiered access control.",
+                    "VPC Service Controls": "Incorrect. This is for creating a security perimeter around GCP services to prevent data exfiltration, not for controlling VM-to-VM traffic.",
+                    "Service Accounts": "Incorrect. Service accounts can be used as a target for firewall rules, but the rule itself is the feature that controls access."
                 }
             },
             {
@@ -675,7 +813,10 @@
                 ],
                 correctAnswer: "Google Cloud Memorystore for Redis.",
                 feedback: {
-                    "Google Cloud Memorystore for Redis.": "Correct! Memorystore for Redis provides a managed, in-memory data store that is scalable and ideal for externalized session state."
+                    "In-memory session on each web server instance.": "Incorrect. This is not scalable, as session state is lost if an instance fails or if the user's next request goes to a different instance.",
+                    "Google Cloud Memorystore for Redis.": "Correct! Memorystore provides a managed, in-memory data store (Redis) that is external to the application instances. This allows any instance to access the session state, making the application stateless and highly scalable.",
+                    "Client-side cookies with encrypted session data.": "Incorrect. This has size limitations and potential security concerns, and is not suitable for complex session data.",
+                    "Persistent Disk attached to a single web server.": "Incorrect. This creates a single point of failure and does not scale horizontally."
                 }
             },
             {
@@ -684,7 +825,10 @@
                 options: ["Set up Cloud Identity.", "Use Identity Platform.", "Implement Managed Microsoft AD.", "Configure Directory Sync."],
                 correctAnswer: "Configure Directory Sync.",
                 feedback: {
-                    "Configure Directory Sync.": "Correct! Directory Sync (GCDS) synchronizes users from on-premises Active Directory to Cloud Identity, allowing authentication against the existing AD."
+                    "Set up Cloud Identity.": "Incorrect. Cloud Identity is the destination for the synced identities, but it doesn't perform the synchronization itself.",
+                    "Use Identity Platform.": "Incorrect. This is for managing customer-facing application identities, not for enterprise workforce identity.",
+                    "Implement Managed Microsoft AD.": "Incorrect. This creates a new, managed AD in the cloud, but the requirement is to use the *existing* on-premises AD.",
+                    "Configure Directory Sync.": "Correct! Google Cloud Directory Sync (GCDS) is the tool used to synchronize users, groups, and other data from your existing Active Directory to your Cloud Identity domain, establishing the on-prem AD as the source of truth."
                 }
             },
             {
@@ -698,7 +842,10 @@
                 ],
                 correctAnswer: "Cloud Storage with Cloud Functions.",
                 feedback: {
-                    "Cloud Storage with Cloud Functions.": "Correct! Cloud Functions can be triggered by Cloud Storage events, providing a serverless, auto-scaling solution for file processing."
+                    "Cloud Storage with Cloud Functions.": "Correct! This is a classic serverless, event-driven pattern. Cloud Functions can be configured with a Cloud Storage trigger to automatically execute code whenever a new file is uploaded to a bucket.",
+                    "Cloud Pub/Sub with Cloud Dataflow.": "Incorrect. This pattern is better suited for streaming data, not for processing individual file uploads.",
+                    "Cloud Storage with Compute Engine.": "Incorrect. This is not a serverless solution and would require you to manage VMs.",
+                    "Cloud Pub/Sub with Cloud Run.": "Incorrect. While possible, using a Cloud Function with a direct Storage trigger is a more direct and simpler pattern for this use case."
                 }
             },
             {
@@ -707,7 +854,10 @@
                 options: ["Google Cloud SQL", "Google Cloud Spanner", "Google Cloud Bigtable", "Google BigQuery"],
                 correctAnswer: "Google BigQuery",
                 feedback: {
-                    "Google BigQuery": "Correct! BigQuery supports complex analytical queries, including geospatial functions (GIS), on massive datasets."
+                    "Google Cloud SQL": "Incorrect. While it supports some geospatial data types, it is not optimized for the scale and complexity of analytical queries that BigQuery can handle.",
+                    "Google Cloud Spanner": "Incorrect. Spanner is for transactional workloads, not for complex analytics.",
+                    "Google Cloud Bigtable": "Incorrect. This is a NoSQL database and does not support SQL or complex geospatial queries.",
+                    "Google BigQuery": "Correct! BigQuery is a data warehouse that excels at complex analytical queries and has robust, built-in support for geospatial data types and functions (GIS), making it the perfect tool for this use case."
                 }
             },
             {
@@ -721,7 +871,10 @@
                 ],
                 correctAnswer: "Set up a Multi-Region Load Balancer and deploy MIGs in another region.",
                 feedback: {
-                    "Set up a Multi-Region Load Balancer and deploy MIGs in another region.": "Correct! A Multi-Region Load Balancer can route traffic to the nearest healthy region, providing DR for regional outages."
+                    "Create regular snapshots of the persistent disks.": "Incorrect. The application is stateless, so there is no critical state on the disks to snapshot. This is not a DR strategy for the application itself.",
+                    "Set up a Multi-Region Load Balancer and deploy MIGs in another region.": "Correct! For a stateless application, DR is about routing traffic to a working copy of the application. A global load balancer can automatically detect a regional failure and direct all traffic to the healthy MIG in the other region.",
+                    "Configure a Cloud VPN connection to an on-premises DR site.": "Incorrect. This is a hybrid cloud solution, not a cloud-native DR strategy.",
+                    "Implement a manual failover process to a standby application in another zone.": "Incorrect. A zonal failure is not a regional outage. This solution is manual and does not protect against the failure of an entire region."
                 }
             },
             {
@@ -730,7 +883,10 @@
                 options: ["Cloud VPN", "Cloud Interconnect", "Identity-Aware Proxy (IAP)", "Cloud Armor"],
                 correctAnswer: "Identity-Aware Proxy (IAP)",
                 feedback: {
-                    "Identity-Aware Proxy (IAP)": "Correct! IAP provides secure, identity-based access to internal web apps over the public internet, eliminating the need for a VPN."
+                    "Cloud VPN": "Incorrect. The requirement specifically states 'without using a VPN'.",
+                    "Cloud Interconnect": "Incorrect. This is for high-bandwidth private network connectivity, not for providing identity-based access to individual users.",
+                    "Identity-Aware Proxy (IAP)": "Correct! IAP acts as a secure proxy that enforces access control policies based on user identity and context, allowing you to grant access to internal applications without requiring a VPN.",
+                    "Cloud Armor": "Incorrect. Cloud Armor is a WAF and DDoS protection service; it protects applications from external threats but does not provide identity-based access for internal users."
                 }
             },
             {
@@ -739,7 +895,10 @@
                 options: ["Cloud Logging", "Cloud Monitoring", "Cloud Trace", "Cloud Audit Logs"],
                 correctAnswer: "Cloud Monitoring",
                 feedback: {
-                    "Cloud Monitoring": "Correct! Cloud Monitoring can ingest metrics and logs from both GCP and on-premises environments, providing unified visibility."
+                    "Cloud Logging": "Incorrect. Cloud Logging is primarily for logs, while Cloud Monitoring provides a unified view of both logs and metrics.",
+                    "Cloud Monitoring": "Correct! Cloud Monitoring can ingest metrics and logs from both GCP and other environments (like on-premises) via its agent, providing a centralized 'single pane of glass' for a hybrid setup.",
+                    "Cloud Trace": "Incorrect. This is specifically for distributed tracing, not for general-purpose monitoring.",
+                    "Cloud Audit Logs": "Incorrect. This is for auditing administrative changes, not for application performance monitoring."
                 }
             },
             {
@@ -748,7 +907,10 @@
                 options: ["Google Cloud SQL", "Google Cloud Spanner", "Google Cloud Bigtable", "Google Cloud Firestore"],
                 correctAnswer: "Google Cloud Bigtable",
                 feedback: {
-                    "Google Cloud Bigtable": "Correct! Bigtable is a NoSQL database optimized for very high write throughput and range queries, suitable for ledger-like data."
+                    "Google Cloud SQL": "Incorrect. A relational database is not optimized for the extremely high, append-only write throughput of a ledger.",
+                    "Google Cloud Spanner": "Incorrect. While it has strong consistency, it's not the most cost-effective or performant choice for a pure high-throughput, append-only workload compared to Bigtable.",
+                    "Google Cloud Bigtable": "Correct! Bigtable is a NoSQL wide-column store that excels at high-throughput writes and fast range scans, making it a perfect fit for time-series or ledger-like data.",
+                    "Google Cloud Firestore": "Incorrect. This is a document database for application data and does not scale to the write throughput required for a large-scale ledger."
                 }
             },
             {
@@ -762,7 +924,10 @@
                 ],
                 correctAnswer: "Use Storage Transfer Service.",
                 feedback: {
-                    "Use Storage Transfer Service.": "Correct! This is a fully managed service for large-scale, automated data transfers into Cloud Storage."
+                    "Use gsutil cp from a Compute Engine VM.": "Incorrect. This requires you to manage and pay for a VM to run the transfer, making it less cost-effective and less managed than other options.",
+                    "Use Storage Transfer Service.": "Correct! This is a fully managed, serverless service designed for large-scale, scheduled, and reliable data transfers into Cloud Storage from online sources, making it very cost-effective.",
+                    "Use Cloud Pub/Sub.": "Incorrect. This is for real-time streaming data, not for transferring large batches of files.",
+                    "Use Cloud Dataflow.": "Incorrect. Dataflow is a data processing service. While it can write to Cloud Storage, it's not the primary tool for simple data transfer."
                 }
             },
             {
@@ -771,7 +936,10 @@
                 options: ["Cloud Console", "gcloud CLI", "Deployment Manager", "Cloud Shell"],
                 correctAnswer: "Deployment Manager",
                 feedback: {
-                    "Deployment Manager": "Correct! Deployment Manager is Google Cloud's native Infrastructure as Code (IaC) service."
+                    "Cloud Console": "Incorrect. The console is for manual, imperative actions and is not repeatable or version-controlled.",
+                    "gcloud CLI": "Incorrect. The gcloud CLI is also imperative. While it can be scripted, it's not a declarative Infrastructure as Code (IaC) tool.",
+                    "Deployment Manager": "Correct! Deployment Manager (or Terraform) is Google Cloud's native IaC service, allowing you to define your infrastructure declaratively in templates that can be version-controlled and used for repeatable deployments.",
+                    "Cloud Shell": "Incorrect. Cloud Shell is a temporary environment with the gcloud CLI pre-installed; it is not an IaC tool itself."
                 }
             },
             {
@@ -785,7 +953,10 @@
                 ],
                 correctAnswer: "External HTTP(S) Load Balancer (Global)",
                 feedback: {
-                    "External HTTP(S) Load Balancer (Global)": "Correct! It uses Google's global network to route requests to the closest backend, minimizing latency."
+                    "Regional HTTP(S) Load Balancer": "Incorrect. This only serves traffic from within a single region and does not optimize for a global user base.",
+                    "Internal HTTP(S) Load Balancer": "Incorrect. This is for internal traffic within your VPC.",
+                    "External HTTP(S) Load Balancer (Global)": "Correct! The global external HTTP(S) load balancer uses a single anycast IP address and Google's global network to route users to the closest healthy backend, providing the best performance and lowest latency for global users.",
+                    "Network Load Balancer (External)": "Incorrect. This is a regional, Layer 4 load balancer and is not optimized for global HTTP/S traffic."
                 }
             },
             {
@@ -794,7 +965,10 @@
                 options: ["VPC Service Controls", "Context-Aware Access", "Two-Step Verification", "Identity Platform"],
                 correctAnswer: "Two-Step Verification",
                 feedback: {
-                    "Two-Step Verification": "Correct! Two-Step Verification (MFA/2FA) adds a second layer of security to user accounts."
+                    "VPC Service Controls": "Incorrect. This is for preventing data exfiltration, not for user authentication.",
+                    "Context-Aware Access": "Incorrect. This allows you to create granular access policies, but the core feature for MFA is 2-Step Verification.",
+                    "Two-Step Verification": "Correct! This is Google's term for Multi-Factor Authentication (MFA/2FA) and is the standard way to add an extra layer of security to user accounts.",
+                    "Identity Platform": "Incorrect. This is for managing identities for customer-facing applications, not for securing access to the GCP console."
                 }
             },
             {
@@ -808,7 +982,10 @@
                 ],
                 correctAnswer: "Group them logically into a Cloud Deployment Manager template.",
                 feedback: {
-                    "Group them logically into a Cloud Deployment Manager template.": "Correct! An IaC tool like Deployment Manager allows you to define all resources as a single, deployable unit."
+                    "Separate projects for each resource type.": "Incorrect. This would make managing the interdependent application very complex.",
+                    "Use a single project for all resources and manage manually.": "Incorrect. Manual management is not consistent, repeatable, or version-controlled.",
+                    "Define them using a resource hierarchy (Organization, Folders, Projects).": "Incorrect. The resource hierarchy is for organizing projects, not for managing a set of resources as a single application unit.",
+                    "Group them logically into a Cloud Deployment Manager template.": "Correct! An Infrastructure as Code tool like Deployment Manager or Terraform allows you to define all the resources for an application in a template, which can then be deployed, updated, and deleted as a single, logical unit."
                 }
             },
             {
@@ -817,7 +994,10 @@
                 options: ["Standard", "Nearline", "Coldline", "Archive"],
                 correctAnswer: "Coldline",
                 feedback: {
-                    "Coldline": "Correct! Coldline offers low storage costs with reasonable retrieval speed, making it a good balance for DR backups."
+                    "Standard": "Incorrect. Too expensive for rarely accessed data.",
+                    "Nearline": "Incorrect. Good for data accessed about once a month, but Coldline is more cost-effective for even less frequent access.",
+                    "Coldline": "Correct! Coldline is designed for data accessed at most once a quarter. It offers low storage costs but still provides relatively fast retrieval (seconds), making it a good balance for DR backups.",
+                    "Archive": "Incorrect. Archive has the lowest storage cost but high retrieval costs and latency (minutes to hours), which is not ideal if the data must be 'retrieved quickly'."
                 }
             },
             {
@@ -826,7 +1006,10 @@
                 options: ["Google Cloud Dataproc", "Google Cloud Dataflow", "Google Cloud Composer", "Google BigQuery"],
                 correctAnswer: "Google Cloud Dataflow",
                 feedback: {
-                    "Google Cloud Dataflow": "Correct! Dataflow is a fully managed service for scalable, real-time stream processing and analytics."
+                    "Google Cloud Dataproc": "Incorrect. Dataproc is primarily for batch processing with Spark and Hadoop.",
+                    "Google Cloud Dataflow": "Correct! Dataflow is a fully managed service for unified stream and batch data processing, making it the ideal choice for continuous, real-time analytics on streaming data.",
+                    "Google Cloud Composer": "Incorrect. Composer is a workflow orchestration service (managed Airflow), not a stream processing engine.",
+                    "Google BigQuery": "Incorrect. BigQuery can perform analytics on streaming data, but Dataflow is the service used for the complex, real-time processing and transformation of the stream itself."
                 }
             },
             {
@@ -835,7 +1018,10 @@
                 options: ["External Load Balancer", "Service Mesh", "Shared VPC", "Kubernetes Services"],
                 correctAnswer: "Kubernetes Services",
                 feedback: {
-                    "Kubernetes Services": "Correct! Kubernetes Services provide stable network endpoints and load balancing for pods, enabling reliable inter-service communication."
+                    "External Load Balancer": "Incorrect. This is for exposing services to traffic from outside the cluster.",
+                    "Service Mesh": "Incorrect. A service mesh adds advanced capabilities (like mTLS, traffic control) on top of Kubernetes Services, but the fundamental concept for enabling communication is the Service object itself.",
+                    "Shared VPC": "Incorrect. This is for sharing a VPC network across multiple projects, not for inter-service communication within a single cluster.",
+                    "Kubernetes Services": "Correct! A Kubernetes Service provides a stable, abstract way to expose a set of pods as a network service. It gives them a stable IP address and DNS name, and load balances traffic, which is the fundamental mechanism for enabling communication between microservices in a cluster."
                 }
             },
             {
@@ -844,7 +1030,10 @@
                 options: ["Folders", "Projects", "Organization", "Resource Groups"],
                 correctAnswer: "Organization",
                 feedback: {
-                    "Organization": "Correct! The Organization node is the root of the GCP resource hierarchy, providing centralized control over all resources."
+                    "Folders": "Incorrect. Folders are used to group projects and exist within an Organization.",
+                    "Projects": "Incorrect. Projects contain resources and are the base level of the hierarchy.",
+                    "Organization": "Correct! The Organization node is the root of the Google Cloud resource hierarchy. It is associated with your company's domain and provides centralized control over all projects and billing.",
+                    "Resource Groups": "Incorrect. This is not a standard component of the GCP resource hierarchy."
                 }
             }
         ];
@@ -976,15 +1165,8 @@
                 const correctAnswers = new Set(question.correctAnswers);
                 const selectedAnswers = new Set(userAnswer || []);
                 isCorrect = correctAnswers.size === selectedAnswers.size && [...correctAnswers].every(val => selectedAnswers.has(val));
-                
-                feedbackHtml = Object.entries(question.feedback)
-                    .filter(([option, text]) => correctAnswers.has(option))
-                    .map(([option, text]) => `<p class="mt-2 text-sm">${text}</p>`)
-                    .join('');
-
             } else {
                 isCorrect = userAnswer === question.correctAnswer;
-                feedbackHtml = `<p class="mt-2 text-sm">${question.feedback[question.correctAnswer] || 'The correct answer is highlighted above.'}</p>`;
             }
 
             // Apply styling to options
@@ -1005,6 +1187,30 @@
                     }
                 }
             });
+            
+            // Build feedback HTML
+            if (isCorrect) {
+                 if (question.type === 'CHECKBOX') {
+                    feedbackHtml = question.correctAnswers.map(ans => `<p class="mt-2 text-sm">${question.feedback[ans]}</p>`).join('');
+                } else {
+                    feedbackHtml = `<p class="mt-2 text-sm">${question.feedback[question.correctAnswer]}</p>`;
+                }
+            } else {
+                // Incorrect answer logic
+                if (question.type === 'CHECKBOX') {
+                     feedbackHtml = `<p class="mt-2 text-sm font-semibold">Here are the correct explanations:</p>` + 
+                                   question.correctAnswers.map(ans => `<p class="mt-2 text-sm">${question.feedback[ans]}</p>`).join('');
+                } else {
+                    const userFeedback = question.feedback[userAnswer] 
+                        ? `<p class="mt-2 text-sm"><span class="font-bold">Your Answer's Feedback:</span> ${question.feedback[userAnswer]}</p>` 
+                        : `<p class="mt-2 text-sm">You did not select an answer.</p>`;
+
+                    const correctFeedback = question.feedback[question.correctAnswer] 
+                        ? `<p class="mt-4 text-sm"><span class="font-bold">Correct Answer's Feedback:</span> ${question.feedback[question.correctAnswer]}</p>`
+                        : '';
+                    feedbackHtml = userFeedback + correctFeedback;
+                }
+            }
 
             const feedbackColor = isCorrect ? 'bg-green-100 border-green-500' : 'bg-red-100 border-red-500';
             const feedbackTitle = isCorrect ? '🎉 Correct! 🎉' : '🤔 Not Quite...';
