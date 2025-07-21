@@ -7,60 +7,90 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
+        /* --- New Light Theme --- */
+
+        @keyframes gradient-animation {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        html, body {
+            height: 100%;
+        }
+
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #f8fafc; /* Slate-50 */
-            background-image: radial-gradient(circle at top left, #e0e7ff, #f3e8ff); /* Indigo-100 to Purple-100 */
+            background-color: #f8fafc; /* Light Slate Background */
+            background-image: radial-gradient(at 27% 37%, hsla(215, 98%, 61%, 0.15) 0px, transparent 50%), 
+                              radial-gradient(at 97% 21%, hsla(145, 98%, 61%, 0.15) 0px, transparent 50%),
+                              radial-gradient(at 52% 99%, hsla(355, 98%, 61%, 0.15) 0px, transparent 50%),
+                              radial-gradient(at 10% 29%, hsla(256, 96%, 61%, 0.15) 0px, transparent 50%),
+                              radial-gradient(at 97% 96%, hsla(38, 60%, 62%, 0.15) 0px, transparent 50%),
+                              radial-gradient(at 33% 50%, hsla(222, 67%, 73%, 0.15) 0px, transparent 50%),
+                              radial-gradient(at 79% 53%, hsla(343, 68%, 79%, 0.15) 0px, transparent 50%);
+            background-size: 400% 400%;
+            animation: gradient-animation 15s ease infinite;
+            color: #1e293b; /* Dark Slate Text */
+            display: flex;
+            flex-direction: column;
         }
 
-        /* --- Main Card Styles --- */
+        /* --- Light Card Style --- */
         .card {
-            background-color: rgba(255, 255, 255, 0.85);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            box-shadow: 0 8px 32px 0 rgba(100, 116, 139, 0.15); /* Softer, larger shadow */
+            background-color: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(16px) saturate(180%);
+            -webkit-backdrop-filter: blur(16px) saturate(180%);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
         }
 
-        /* --- Quiz Option Styles --- */
+        /* --- Header --- */
+        #main-header h1 {
+            color: #0f172a; /* Darker Slate for Heading */
+        }
+        #main-header p {
+            color: #475569; /* Medium Slate for Subheading */
+        }
+
+        /* --- Light Quiz Option Styles --- */
         .quiz-option {
             transition: all 0.25s ease-in-out;
             cursor: pointer;
-            border: 2px solid transparent;
-            background-color: #f8fafc; /* Slate-50 */
+            border: 2px solid #e2e8f0; /* Light Gray Border */
+            background-color: #ffffff;
         }
         .quiz-option:hover {
-            transform: translateY(-3px);
-            border-color: #a5b4fc; /* Indigo-300 */
-            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            transform: translateY(-4px) scale(1.02);
+            border-color: #3b82f6; /* Blue-500 */
+            box-shadow: 0 0 20px rgba(59, 130, 246, 0.15);
         }
         .quiz-option.selected {
-            background-color: #e0e7ff; /* Indigo-100 */
-            border-color: #6366f1; /* Indigo-500 */
-            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+            background-color: #eff6ff; /* Blue-50 */
+            border-color: #2563eb; /* Blue-600 */
         }
         .quiz-option.correct {
-            background-color: #ecfdf5; /* Green-50 */
-            border-color: #10b981; /* Green-500 */
+            background-color: rgba(34, 197, 94, 0.1);
+            border-color: #16a34a; /* Green-600 */
         }
         .quiz-option.incorrect {
-            background-color: #fff1f2; /* Rose-50 */
-            border-color: #f43f5e; /* Rose-500 */
+            background-color: rgba(239, 68, 68, 0.1);
+            border-color: #ef4444; /* Red-500 */
         }
         .status-icon {
             width: 24px;
             height: 24px;
         }
 
-        /* --- Feedback Card Animation --- */
+        /* --- Feedback Card --- */
         .feedback-card {
             max-height: 0;
-            overflow: hidden; /* Use hidden instead of auto for smoother transition */
+            overflow: hidden;
             transition: max-height 0.5s ease-in-out, padding 0.5s ease-in-out, margin 0.5s ease-in-out, opacity 0.5s ease-in-out;
             opacity: 0;
         }
         .feedback-card.show {
-            max-height: 800px; /* Increased for very long feedback */
+            max-height: 800px;
             padding-top: 1.5rem;
             padding-bottom: 1.5rem;
             margin-top: 1.5rem;
@@ -71,43 +101,46 @@
         .answered .quiz-option:not(.selected):not(.correct) {
             cursor: not-allowed;
             opacity: 0.6;
-            filter: grayscale(60%);
+            filter: grayscale(50%);
         }
         .answered .quiz-option:hover {
-            transform: none; /* Disable hover movement after answering */
+            transform: none;
+            box-shadow: none;
         }
 
-        /* --- Button Styles --- */
+        /* --- Light Button Styles --- */
         .btn {
             transition: all 0.2s ease-in-out;
-            border-radius: 0.5rem; /* Slightly larger radius */
-            font-weight: 600; /* semibold */
-            box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+            border-radius: 0.5rem;
+            font-weight: 600;
+            border: 1px solid transparent;
         }
         .btn:hover {
             transform: translateY(-2px) scale(1.02);
-            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -2px rgb(0 0 0 / 0.05);
         }
         .btn:active {
             transform: translateY(-1px) scale(1.0);
         }
         .btn-primary {
-            background-image: linear-gradient(to right, #4f46e5, #7c3aed); /* Indigo-600 to Violet-600 */
+            background-image: linear-gradient(to right, #3b82f6, #6366f1); /* Blue to Indigo */
             color: white;
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.2);
         }
         .btn-primary:hover {
-             background-image: linear-gradient(to right, #4338ca, #6d28d9); /* Darker variants */
+             filter: brightness(1.1);
+             box-shadow: 0 0 25px rgba(59, 130, 246, 0.4);
         }
         .btn-secondary {
-            background-color: white;
-            color: #4338ca; /* Indigo-700 */
-            border: 1px solid #e0e7ff; /* Indigo-100 */
+            background-color: #e5e7eb; /* Gray-200 */
+            color: #374151; /* Gray-700 */
+            border-color: #d1d5db; /* Gray-300 */
         }
         .btn-secondary:hover {
-            background-color: #f8fafc; /* Slate-50 */
+            background-color: #d1d5db; /* Gray-300 */
+            border-color: #9ca3af; /* Gray-400 */
         }
 
-        /* --- Progress Bar --- */
+        /* --- Light Progress Bar --- */
         #progress-container {
             width: 100%;
             background-color: #e5e7eb; /* Gray-200 */
@@ -116,18 +149,69 @@
             box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
         }
         #progress-bar {
-            background-image: linear-gradient(to right, #a5b4fc, #6366f1); /* Indigo-300 to Indigo-500 */
+            background-image: linear-gradient(to right, #3b82f6, #8b5cf6);
             height: 100%;
             border-radius: 9999px;
             transition: width 0.4s ease-in-out;
+            box-shadow: 0 0 10px rgba(59, 130, 246, 0.4);
+        }
+        
+        /* --- Light Results & Review --- */
+        #score-circle {
+            background: conic-gradient(from 180deg at 50% 50%, #f3f4f6 0%, #ffffff 100%);
+            border-color: #e5e7eb;
+        }
+        #score-text {
+            color: #1d4ed8; /* Blue-700 */
+        }
+        .review-answer-correct {
+            color: #15803d; /* Green-700 */
+            font-weight: 600;
+        }
+        .review-answer-incorrect {
+            color: #b91c1c; /* Red-700 */
+            font-weight: 600;
+        }
+        
+        /* --- Scrolling Fixes --- */
+        #review-content {
+            max-height: 65vh; 
+            overflow-y: auto;
+            padding-right: 1rem; 
+        }
+
+        .feedback-explanations {
+            max-height: 300px;
+            overflow-y: auto;
+            padding-right: 0.5rem;
+        }
+
+        /* Custom scrollbar for webkit browsers */
+        #review-content::-webkit-scrollbar, .feedback-explanations::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        #review-content::-webkit-scrollbar-track, .feedback-explanations::-webkit-scrollbar-track {
+            background: #e2e8f0;
+            border-radius: 10px;
+        }
+
+        #review-content::-webkit-scrollbar-thumb, .feedback-explanations::-webkit-scrollbar-thumb {
+            background-color: #94a3b8;
+            border-radius: 10px;
+            border: 2px solid #e2e8f0;
+        }
+
+        #review-content::-webkit-scrollbar-thumb:hover, .feedback-explanations::-webkit-scrollbar-thumb:hover {
+            background-color: #64748b;
         }
     </style>
 </head>
 <body class="text-slate-800">
 
-    <div class="container mx-auto p-4 sm:p-6 lg:p-8 max-w-4xl">
+    <div class="container mx-auto p-4 sm:p-6 lg:p-8 max-w-6xl flex flex-col flex-grow">
         <header id="main-header" class="text-center mb-8">
-            <h1 class="text-3xl sm:text-4xl font-extrabold text-slate-900 flex items-center justify-center">
+            <h1 class="text-3xl sm:text-4xl font-extrabold flex items-center justify-center">
                 <span class="inline-block align-middle w-10 h-10 mr-3">
                     <svg viewBox="0 0 108 72" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M85.333 29.333c-2.07-12.2-12.72-21.333-25.333-21.333-8.107 0-15.307 3.84-19.893 9.76C37.333 17.013 33.813 16 30 16c-8.827 0-16 7.173-16 16 0 .613.053.933.16.1.213-3.947 3.52-7.1 7.547-7.1h1.76c.693 0 1.333.32 1.76.853.48-5.387 5.12-9.547 10.773-9.547 6.187 0 11.2 4.907 11.307 11.093.053.853.747 1.547 1.6 1.547h.427c5.44 0 9.866 4.427 9.866 9.867 0 5.173-4.053 9.493-9.28 9.813H37.333c-6.627 0-12 5.373-12 12s5.373 12 12 12h48c9.707 0 17.333-7.947 17.333-17.333 0-9.28-7.253-16.853-16.333-17.333z" fill="#4285F4"/>
@@ -137,57 +221,63 @@
                 </span>
                 GCP Architect Quiz 🧠
             </h1>
-            <p class="text-slate-600 mt-2 text-lg">Test your knowledge and prepare for certification!</p>
+            <p class="mt-2 text-lg">Test your knowledge and prepare for certification!</p>
         </header>
 
-        <div id="quiz-container" class="card p-6 sm:p-8 rounded-2xl">
+        <main class="flex-grow">
+            <!-- The quiz content will be dynamically inserted here by script.js -->
+            <div id="quiz-container" class="card p-6 sm:p-8 rounded-2xl">
             </div>
 
-        <div id="navigation-container" class="mt-8 flex items-center justify-between gap-4">
-            <button id="prev-btn" class="btn btn-secondary py-2 px-4 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none disabled:shadow-sm">Previous</button>
-            
-            <div class="flex-grow text-center">
-                <div id="progress-container">
-                    <div id="progress-bar" style="width: 0%;"></div>
+            <!-- Navigation controls for the quiz -->
+            <div id="navigation-container" class="mt-8 flex items-center justify-between gap-4">
+                <button id="prev-btn" class="btn btn-secondary py-2 px-4 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none">Previous</button>
+                
+                <div class="flex-grow text-center">
+                    <div id="progress-container">
+                        <div id="progress-bar" style="width: 0%;"></div>
+                    </div>
+                    <div id="progress-indicator" class="text-sm font-medium text-slate-500 mt-2">
+                        Question <span id="current-q-span">1</span> of <span id="total-q-span">60</span>
+                    </div>
                 </div>
-                <div id="progress-indicator" class="text-sm font-medium text-slate-600 mt-2">
-                    Question <span id="current-q-span">1</span> of <span id="total-q-span">60</span>
-                </div>
+                
+                <button id="next-btn" class="btn btn-primary py-2 px-4">Next</button>
             </div>
-            
-            <button id="next-btn" class="btn btn-primary py-2 px-4">Next</button>
-        </div>
 
-        <div id="results-container" class="hidden text-center card p-8 rounded-2xl">
-            <h2 class="text-3xl font-bold text-slate-900 mb-4">🏆 Quiz Complete! 🏆</h2>
-            <p class="text-lg text-slate-700 mb-2">Your Final Score:</p>
-            <div id="score-circle" class="relative w-40 h-40 mx-auto flex items-center justify-center rounded-full bg-indigo-100 mb-6 border-4 border-indigo-200">
-                <span id="score-text" class="text-5xl font-extrabold text-indigo-600"></span>
+            <!-- Results screen, hidden by default -->
+            <div id="results-container" class="hidden text-center card p-8 rounded-2xl">
+                <h2 class="text-3xl font-bold mb-4">🏆 Quiz Complete! 🏆</h2>
+                <p class="text-lg text-slate-700 mb-2">Your Final Score:</p>
+                <div id="score-circle" class="relative w-40 h-40 mx-auto flex items-center justify-center rounded-full mb-6 border-4">
+                    <span id="score-text" class="text-5xl font-extrabold"></span>
+                </div>
+                <p id="score-summary" class="text-slate-600 text-lg mb-8"></p>
+                <div class="flex flex-col sm:flex-row justify-center gap-4">
+                     <button id="review-btn" class="btn btn-secondary py-3 px-6">Review Answers</button>
+                     <button id="restart-btn" class="btn btn-primary py-3 px-6">Restart Quiz</button>
+                </div>
             </div>
-            <p id="score-summary" class="text-slate-600 text-lg mb-8"></p>
-            <div class="flex flex-col sm:flex-row justify-center gap-4">
-                 <button id="review-btn" class="btn btn-secondary py-3 px-6">Review Answers</button>
-                 <button id="restart-btn" class="btn btn-primary py-3 px-6">Restart Quiz</button>
-            </div>
-        </div>
-        
-        <div id="review-container" class="hidden card p-6 sm:p-8 rounded-2xl">
-             <h2 class="text-3xl font-bold text-slate-900 mb-6 text-center">📋 Answer Review</h2>
-             <div id="review-content" class="space-y-6">
+            
+            <!-- Review screen, hidden by default -->
+            <div id="review-container" class="hidden card p-6 sm:p-8 rounded-2xl">
+                 <h2 class="text-3xl font-bold mb-6 text-center">📋 Answer Review</h2>
+                 <div id="review-content" class="space-y-6">
+                     <!-- Review content will be dynamically inserted here -->
                  </div>
-             <div class="text-center mt-8">
-                 <button id="back-to-score-btn" class="btn btn-primary py-2 px-4">Back to Score</button>
-             </div>
-        </div>
-
+                 <div class="text-center mt-8">
+                     <button id="back-to-score-btn" class="btn btn-primary py-2 px-4">Back to Score</button>
+                 </div>
+            </div>
+        </main>
     </div>
     
-    <footer class="text-center p-4 mt-8">
+    <footer class="text-center p-4 mt-4">
         <p class="text-sm text-slate-500">Made with ❤️ by Arjun</p>
     </footer>
 
     <script>
-        // --- Data ---
+        // --- DATA ---
         const quizData = [
             {
                 title: "Q1: API Versioning (Same DNS/SSL)",
@@ -1095,373 +1185,360 @@
             }
         ];
 
-        // --- State Management ---
-        let currentQuestionIndex = 0;
-        let userAnswers = new Array(quizData.length).fill(null);
-        let score = 0;
-        let shuffledOptionsMap = new Map(); // Store shuffled options for consistency
+        // --- SCRIPT LOGIC ---
+        document.addEventListener('DOMContentLoaded', () => {
+            // --- State Management ---
+            let currentQuestionIndex = 0;
+            let userAnswers = new Array(quizData.length).fill(null);
+            let score = 0;
+            let shuffledOptionsMap = new Map();
 
-        // --- DOM Elements ---
-        const mainHeader = document.getElementById('main-header');
-        const quizContainer = document.getElementById('quiz-container');
-        const navigationContainer = document.getElementById('navigation-container');
-        const resultsContainer = document.getElementById('results-container');
-        const reviewContainer = document.getElementById('review-container');
-        const reviewContent = document.getElementById('review-content');
-        const prevBtn = document.getElementById('prev-btn');
-        const nextBtn = document.getElementById('next-btn');
-        const currentQSpan = document.getElementById('current-q-span');
-        const totalQSpan = document.getElementById('total-q-span');
-        const restartBtn = document.getElementById('restart-btn');
-        const reviewBtn = document.getElementById('review-btn');
-        const backToScoreBtn = document.getElementById('back-to-score-btn');
-        const scoreText = document.getElementById('score-text');
-        const scoreSummary = document.getElementById('score-summary');
-        const progressBar = document.getElementById('progress-bar');
+            // --- DOM Elements ---
+            const mainHeader = document.getElementById('main-header');
+            const quizContainer = document.getElementById('quiz-container');
+            const navigationContainer = document.getElementById('navigation-container');
+            const resultsContainer = document.getElementById('results-container');
+            const reviewContainer = document.getElementById('review-container');
+            const reviewContent = document.getElementById('review-content');
+            const prevBtn = document.getElementById('prev-btn');
+            const nextBtn = document.getElementById('next-btn');
+            const currentQSpan = document.getElementById('current-q-span');
+            const totalQSpan = document.getElementById('total-q-span');
+            const restartBtn = document.getElementById('restart-btn');
+            const reviewBtn = document.getElementById('review-btn');
+            const backToScoreBtn = document.getElementById('back-to-score-btn');
+            const scoreText = document.getElementById('score-text');
+            const scoreSummary = document.getElementById('score-summary');
+            const progressBar = document.getElementById('progress-bar');
 
-        // --- Icon SVGs ---
-        const checkIconSVG = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="text-emerald-500"><path fill-rule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12zm13.36-1.814a.75.75 0 10-1.06-1.06L10.5 13.19l-1.72-1.72a.75.75 0 00-1.06 1.06l2.25 2.25a.75.75 0 001.06 0l4.5-4.5z" clip-rule="evenodd" /></svg>`;
-        const crossIconSVG = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="text-rose-500"><path fill-rule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25zm-1.72 6.97a.75.75 0 011.06 0L12 9.94l.72-.72a.75.75 0 111.06 1.06L13.06 12l.72.72a.75.75 0 11-1.06 1.06L12 13.06l-.72.72a.75.75 0 01-1.06-1.06l.72-.72-.72-.72a.75.75 0 010-1.06z" clip-rule="evenodd" /></svg>`;
+            // --- Icon SVGs ---
+            const checkIconSVG = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="text-green-600"><path fill-rule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12zm13.36-1.814a.75.75 0 10-1.06-1.06L10.5 13.19l-1.72-1.72a.75.75 0 00-1.06 1.06l2.25 2.25a.75.75 0 001.06 0l4.5-4.5z" clip-rule="evenodd" /></svg>`;
+            const crossIconSVG = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="text-red-600"><path fill-rule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25zm-1.72 6.97a.75.75 0 011.06 0L12 9.94l.72-.72a.75.75 0 111.06 1.06L13.06 12l.72.72a.75.75 0 11-1.06 1.06L12 13.06l-.72.72a.75.75 0 01-1.06-1.06l.72-.72-.72-.72a.75.75 0 010-1.06z" clip-rule="evenodd" /></svg>`;
 
-
-        // --- Functions ---
-
-        /**
-         * Shuffles an array in place using the Fisher-Yates algorithm.
-         * @param {Array} array The array to shuffle.
-         * @returns {Array} The shuffled array.
-         */
-        function shuffleArray(array) {
-            const shuffled = [...array]; // Create a copy to avoid mutating the original
-            for (let i = shuffled.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
-            }
-            return shuffled;
-        }
-
-        /**
-         * Renders the current question to the DOM.
-         */
-        function loadQuestion() {
-            const question = quizData[currentQuestionIndex];
-            const isAnswered = userAnswers[currentQuestionIndex] !== null;
-            const questionType = question.type || 'MULTIPLE_CHOICE';
-            
-            // Shuffle options only once per question per quiz attempt and store them
-            if (!shuffledOptionsMap.has(currentQuestionIndex)) {
-                shuffledOptionsMap.set(currentQuestionIndex, shuffleArray(question.options));
-            }
-            const currentShuffledOptions = shuffledOptionsMap.get(currentQuestionIndex);
-
-            let optionsHtml = '';
-            currentShuffledOptions.forEach((option, index) => {
-                let isSelected = false;
-                if (questionType === 'CHECKBOX') {
-                    isSelected = userAnswers[currentQuestionIndex] && userAnswers[currentQuestionIndex].includes(option);
-                } else {
-                    isSelected = userAnswers[currentQuestionIndex] === option;
+            function shuffleArray(array) {
+                const shuffled = [...array];
+                for (let i = shuffled.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
                 }
+                return shuffled;
+            }
+
+            function loadQuestion() {
+                const question = quizData[currentQuestionIndex];
+                const isAnswered = userAnswers[currentQuestionIndex] !== null;
+                const questionType = question.type || 'MULTIPLE_CHOICE';
                 
-                const optionLetter = String.fromCharCode(65 + index); // A, B, C...
+                if (!shuffledOptionsMap.has(currentQuestionIndex)) {
+                    shuffledOptionsMap.set(currentQuestionIndex, shuffleArray(question.options));
+                }
+                const currentShuffledOptions = shuffledOptionsMap.get(currentQuestionIndex);
 
-                optionsHtml += `
-                    <div class="quiz-option mt-4 p-4 border-2 rounded-lg flex items-center" data-option="${option}">
-                        <input type="${questionType === 'CHECKBOX' ? 'checkbox' : 'radio'}" name="option" class="mr-4 pointer-events-none h-5 w-5 text-indigo-600 border-gray-300 focus:ring-indigo-500" ${isSelected ? 'checked' : ''} ${isAnswered ? 'disabled' : ''}>
-                        <label class="flex-1 pointer-events-none text-slate-700"><span class="font-bold mr-2">${optionLetter}.</span>${option}</label><div class="status-icon ml-auto"></div>
-                    </div>
-                `;
-            });
-
-            quizContainer.innerHTML = `
-                <div class="mb-4">
-                    <h2 class="text-2xl font-bold text-slate-900">${question.title}</h2>
-                    <p class="text-slate-600 mt-2">${question.description}</p>
-                </div>
-                <div id="options-container" class="${isAnswered ? 'answered' : ''}">
-                    ${optionsHtml}
-                </div>
-                <div id="feedback-container"></div>
-                ${questionType === 'CHECKBOX' && !isAnswered ? '<button id="submit-btn" class="btn btn-primary mt-6 w-full py-3 px-4">Submit Answer</button>' : ''}
-            `;
-            
-            updateProgress();
-            updateButtonStates();
-            
-            if (isAnswered) {
-                showFeedback();
-            }
-
-            addOptionListeners();
-        }
-
-        /**
-         * Adds click listeners to the current question's options.
-         */
-        function addOptionListeners() {
-            const question = quizData[currentQuestionIndex];
-            const questionType = question.type || 'MULTIPLE_CHOICE';
-
-            document.querySelectorAll('.quiz-option').forEach(optionEl => {
-                optionEl.addEventListener('click', (e) => {
-                    if (userAnswers[currentQuestionIndex] !== null) return; // Already answered
-
-                    if (questionType === 'MULTIPLE_CHOICE') {
-                        const selectedOption = optionEl.dataset.option;
-                        userAnswers[currentQuestionIndex] = selectedOption;
-                        showFeedback();
-                    } else { // CHECKBOX
-                        const checkbox = e.currentTarget.querySelector('input');
-                        checkbox.checked = !checkbox.checked;
+                let optionsHtml = '';
+                currentShuffledOptions.forEach((option, index) => {
+                    let isSelected = false;
+                    if (questionType === 'CHECKBOX') {
+                        isSelected = userAnswers[currentQuestionIndex] && userAnswers[currentQuestionIndex].includes(option);
+                    } else {
+                        isSelected = userAnswers[currentQuestionIndex] === option;
                     }
+                    
+                    const optionLetter = String.fromCharCode(65 + index);
+
+                    optionsHtml += `
+                        <div class="quiz-option mt-4 p-4 rounded-lg flex items-center" data-option="${option}">
+                            <input type="${questionType === 'CHECKBOX' ? 'checkbox' : 'radio'}" name="option" class="mr-4 pointer-events-none h-5 w-5 bg-transparent border-slate-300 text-blue-600 focus:ring-blue-500" ${isSelected ? 'checked' : ''} ${isAnswered ? 'disabled' : ''}>
+                            <label class="flex-1 pointer-events-none"><span class="font-bold mr-2">${optionLetter}.</span>${option}</label><div class="status-icon ml-auto"></div>
+                        </div>
+                    `;
                 });
-            });
 
-            if (questionType === 'CHECKBOX') {
-                const submitBtn = document.getElementById('submit-btn');
-                if (submitBtn) {
-                    submitBtn.addEventListener('click', () => {
-                        const selectedOptions = Array.from(document.querySelectorAll('.quiz-option input:checked')).map(input => input.parentElement.dataset.option);
-                        userAnswers[currentQuestionIndex] = selectedOptions;
-                        showFeedback();
-                        submitBtn.classList.add('hidden');
+                quizContainer.innerHTML = `
+                    <div class="flex flex-col lg:flex-row lg:gap-8">
+                        <div class="lg:w-5/12 lg:pr-8">
+                            <h2 class="text-2xl lg:text-3xl font-bold">${question.title}</h2>
+                            <p class="text-slate-600 mt-4 text-base lg:text-lg">${question.description}</p>
+                        </div>
+                        <div class="lg:w-7/12 mt-6 lg:mt-0">
+                            <div id="options-container" class="${isAnswered ? 'answered' : ''}">
+                                ${optionsHtml}
+                            </div>
+                            ${questionType === 'CHECKBOX' && !isAnswered ? '<button id="submit-btn" class="btn btn-primary mt-6 w-full py-3 px-4">Submit Answer</button>' : ''}
+                        </div>
+                    </div>
+                    <div id="feedback-container" class="mt-6"></div>
+                `;
+                
+                updateProgress();
+                updateButtonStates();
+                
+                if (isAnswered) {
+                    showFeedback();
+                }
+
+                addOptionListeners();
+            }
+
+            function addOptionListeners() {
+                const question = quizData[currentQuestionIndex];
+                const questionType = question.type || 'MULTIPLE_CHOICE';
+
+                document.querySelectorAll('.quiz-option').forEach(optionEl => {
+                    optionEl.addEventListener('click', (e) => {
+                        if (userAnswers[currentQuestionIndex] !== null) return;
+
+                        if (questionType === 'MULTIPLE_CHOICE') {
+                            const selectedOption = optionEl.dataset.option;
+                            userAnswers[currentQuestionIndex] = selectedOption;
+                            showFeedback();
+                        } else { 
+                            const checkbox = e.currentTarget.querySelector('input');
+                            checkbox.checked = !checkbox.checked;
+                        }
                     });
+                });
+
+                if (questionType === 'CHECKBOX') {
+                    const submitBtn = document.getElementById('submit-btn');
+                    if (submitBtn) {
+                        submitBtn.addEventListener('click', () => {
+                            const selectedOptions = Array.from(document.querySelectorAll('.quiz-option input:checked')).map(input => input.parentElement.dataset.option);
+                            userAnswers[currentQuestionIndex] = selectedOptions;
+                            showFeedback();
+                            submitBtn.style.display = 'none';
+                        });
+                    }
                 }
             }
-        }
 
-        /**
-         * Displays feedback for the current question after an answer is submitted.
-         */
-        function showFeedback() {
-            const question = quizData[currentQuestionIndex];
-            const userAnswer = userAnswers[currentQuestionIndex];
-            const optionsContainer = document.getElementById('options-container');
-            const feedbackContainer = document.getElementById('feedback-container');
-            
-            if (!optionsContainer) return;
+            function showFeedback() {
+                const question = quizData[currentQuestionIndex];
+                const userAnswer = userAnswers[currentQuestionIndex];
+                const optionsContainer = document.getElementById('options-container');
+                const feedbackContainer = document.getElementById('feedback-container');
+                
+                if (!optionsContainer) return;
 
-            optionsContainer.classList.add('answered');
-            optionsContainer.querySelectorAll('input').forEach(input => input.disabled = true);
+                optionsContainer.classList.add('answered');
+                optionsContainer.querySelectorAll('input').forEach(input => input.disabled = true);
 
-            let isCorrect = false;
-            if (question.type === 'CHECKBOX') {
-                const correctAnswers = new Set(question.correctAnswers);
-                const selectedAnswers = new Set(userAnswer || []);
-                isCorrect = correctAnswers.size === selectedAnswers.size && [...correctAnswers].every(val => selectedAnswers.has(val));
-            } else {
-                isCorrect = userAnswer === question.correctAnswer;
-            }
-
-            // Apply styling to options
-            document.querySelectorAll('.quiz-option').forEach(optionEl => {
-                const optionText = optionEl.dataset.option;
-                const statusIconEl = optionEl.querySelector('.status-icon');
-
-                if (question.type === 'CHECKBOX') {
-                    const isCorrectChoice = question.correctAnswers.includes(optionText);
-                    const isSelected = (userAnswer || []).includes(optionText);
-
-                    if (isCorrectChoice) {
-                        optionEl.classList.add('correct');
-                        statusIconEl.innerHTML = checkIconSVG;
-                    }
-                    if (isSelected && !isCorrectChoice) {
-                        optionEl.classList.add('incorrect');
-                        statusIconEl.innerHTML = crossIconSVG;
-                    }
-                } else { // MULTIPLE_CHOICE
-                    if (optionText === question.correctAnswer) {
-                        optionEl.classList.add('correct');
-                        statusIconEl.innerHTML = checkIconSVG;
-                    } else if (optionText === userAnswer) {
-                        optionEl.classList.add('incorrect');
-                        statusIconEl.innerHTML = crossIconSVG;
-                    }
-                }
-            });
-            
-            // Build feedback HTML to show all explanations
-            let feedbackHtml = `<p class="mt-2 text-sm font-semibold">Explanations:</p>`;
-            
-            // Use the shuffled order for displaying feedback to match what the user sees
-            const currentShuffledOptions = shuffledOptionsMap.get(currentQuestionIndex);
-            currentShuffledOptions.forEach((option, index) => {
-                const explanation = question.feedback[option] || "No explanation available for this option.";
-                let isCorrectOption = false;
-                const optionLetter = String.fromCharCode(65 + index);
-
-                if (question.type === 'CHECKBOX') {
-                    isCorrectOption = question.correctAnswers.includes(option);
-                } else {
-                    isCorrectOption = (option === question.correctAnswer);
-                }
-
-                const feedbackItemHtml = `<span class="font-bold mr-2">${optionLetter}.</span> ${explanation}`;
-
-                if (isCorrectOption) {
-                    feedbackHtml += `<div class="mt-2 text-sm p-2 rounded bg-green-50 border-l-4 border-green-500">${feedbackItemHtml}</div>`;
-                } else {
-                    feedbackHtml += `<div class="mt-2 text-sm p-2 rounded bg-red-50 border-l-4 border-red-500">${feedbackItemHtml}</div>`;
-                }
-            });
-
-            const feedbackColor = isCorrect ? 'bg-emerald-50 border-emerald-500' : 'bg-rose-50 border-rose-500';
-            const feedbackTitle = isCorrect ? '🎉 Correct! 🎉' : '🤔 Not Quite...';
-            
-            feedbackContainer.innerHTML = `
-                <div class="feedback-card p-6 border-l-4 rounded-r-lg ${feedbackColor}">
-                    <h3 class="font-bold text-lg">${feedbackTitle}</h3>
-                    ${feedbackHtml}
-                </div>
-            `;
-            setTimeout(() => {
-                const card = document.querySelector('.feedback-card');
-                if(card) card.classList.add('show');
-            }, 10);
-        }
-
-        function updateProgress() {
-            const progressPercent = ((currentQuestionIndex + 1) / quizData.length) * 100;
-            progressBar.style.width = `${progressPercent}%`;
-            currentQSpan.textContent = currentQuestionIndex + 1;
-            totalQSpan.textContent = quizData.length;
-        }
-
-        function updateButtonStates() {
-            prevBtn.disabled = currentQuestionIndex === 0;
-            if (currentQuestionIndex === quizData.length - 1) {
-                nextBtn.textContent = 'Finish Quiz';
-            } else {
-                nextBtn.textContent = 'Next';
-            }
-        }
-
-        function showResults() {
-            score = 0;
-            quizData.forEach((question, index) => {
-                const userAnswer = userAnswers[index];
-                if (question.type === 'CHECKBOX') {
-                    const correctAnswers = new Set(question.correctAnswers);
-                    const selectedAnswers = new Set(userAnswer || []);
-                    if (correctAnswers.size === selectedAnswers.size && [...correctAnswers].every(val => selectedAnswers.has(val))) {
-                        score++;
-                    }
-                } else {
-                    if (userAnswer === question.correctAnswer) {
-                        score++;
-                    }
-                }
-            });
-
-            const percentage = Math.round((score / quizData.length) * 100);
-            scoreText.textContent = `${percentage}%`;
-            scoreSummary.textContent = `You answered ${score} out of ${quizData.length} questions correctly.`;
-
-            quizContainer.classList.add('hidden');
-            navigationContainer.classList.add('hidden');
-            mainHeader.classList.add('hidden');
-            resultsContainer.classList.remove('hidden');
-        }
-
-        function showReview() {
-            resultsContainer.classList.add('hidden');
-            reviewContainer.classList.remove('hidden');
-            
-            let reviewHtml = '';
-            quizData.forEach((question, index) => {
-                const userAnswer = userAnswers[index];
                 let isCorrect = false;
-                let userAnswerHtml = '';
-                let correctAnswerHtml = '';
-
                 if (question.type === 'CHECKBOX') {
                     const correctAnswers = new Set(question.correctAnswers);
                     const selectedAnswers = new Set(userAnswer || []);
                     isCorrect = correctAnswers.size === selectedAnswers.size && [...correctAnswers].every(val => selectedAnswers.has(val));
-                    userAnswerHtml = (userAnswer || []).length > 0 ? (userAnswer || []).map(a => `<li>${a}</li>`).join('') : '<li>No answer</li>';
-                    correctAnswerHtml = question.correctAnswers.map(a => `<li>${a}</li>`).join('');
                 } else {
                     isCorrect = userAnswer === question.correctAnswer;
-                    userAnswerHtml = `<li>${userAnswer || 'No answer'}</li>`;
-                    correctAnswerHtml = `<li>${question.correctAnswer}</li>`;
                 }
-                
-                const resultIcon = isCorrect 
-                    ? `<span class="text-green-500 font-bold ml-2">✔ Correct</span>` 
-                    : `<span class="text-red-500 font-bold ml-2">✖ Incorrect</span>`;
 
-                reviewHtml += `
-                    <div class="border-t border-slate-200 pt-4">
-                        <p class="font-semibold text-lg">${question.title}${resultIcon}</p>
-                        <div class="text-sm mt-2 grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div>
-                                <p class="font-bold mb-1">Your Answer:</p>
-                                <ul class="list-disc list-inside ${isCorrect ? 'text-green-700 font-semibold' : 'text-red-600 font-semibold'}">${userAnswerHtml}</ul>
-                            </div>
-                            ${!isCorrect ? `<div>
-                                <p class="font-bold mb-1">Correct Answer:</p>
-                                <ul class="list-disc list-inside text-green-700 font-semibold">${correctAnswerHtml}</ul>
-                            </div>` : ''}
-                        </div>
+                document.querySelectorAll('.quiz-option').forEach(optionEl => {
+                    const optionText = optionEl.dataset.option;
+                    const statusIconEl = optionEl.querySelector('.status-icon');
+
+                    if (question.type === 'CHECKBOX') {
+                        const isCorrectChoice = question.correctAnswers.includes(optionText);
+                        const isSelected = (userAnswer || []).includes(optionText);
+
+                        if (isCorrectChoice) {
+                            optionEl.classList.add('correct');
+                            statusIconEl.innerHTML = checkIconSVG;
+                        }
+                        if (isSelected && !isCorrectChoice) {
+                            optionEl.classList.add('incorrect');
+                            statusIconEl.innerHTML = crossIconSVG;
+                        }
+                    } else {
+                        if (optionText === question.correctAnswer) {
+                            optionEl.classList.add('correct');
+                            statusIconEl.innerHTML = checkIconSVG;
+                        } else if (optionText === userAnswer) {
+                            optionEl.classList.add('incorrect');
+                            statusIconEl.innerHTML = crossIconSVG;
+                        }
+                    }
+                });
+                
+                let feedbackHtml = `<p class="mt-2 text-sm font-semibold text-slate-700">Explanations:</p>`;
+                
+                const currentShuffledOptions = shuffledOptionsMap.get(currentQuestionIndex);
+                currentShuffledOptions.forEach((option, index) => {
+                    const explanation = question.feedback[option] || "No explanation available.";
+                    let isCorrectOption = false;
+                    const optionLetter = String.fromCharCode(65 + index);
+
+                    if (question.type === 'CHECKBOX') {
+                        isCorrectOption = question.correctAnswers.includes(option);
+                    } else {
+                        isCorrectOption = (option === question.correctAnswer);
+                    }
+
+                    const feedbackItemHtml = `<span class="font-bold mr-2">${optionLetter}.</span> ${explanation}`;
+
+                    if (isCorrectOption) {
+                        feedbackHtml += `<div class="mt-2 text-sm p-3 rounded bg-green-50 border-l-4 border-green-500 text-green-800">${feedbackItemHtml}</div>`;
+                    } else {
+                        feedbackHtml += `<div class="mt-2 text-sm p-3 rounded bg-red-50 border-l-4 border-red-500 text-red-800">${feedbackItemHtml}</div>`;
+                    }
+                });
+
+                const feedbackColor = isCorrect ? 'bg-green-50/50 border-green-500' : 'bg-red-50/50 border-red-500';
+                const feedbackTitle = isCorrect ? '🎉 Correct! 🎉' : '🤔 Not Quite...';
+                
+                feedbackContainer.innerHTML = `
+                    <div class="feedback-card p-6 border-l-4 rounded-r-lg ${feedbackColor}">
+                        <h3 class="font-bold text-lg text-slate-800">${feedbackTitle}</h3>
+                        <div class="feedback-explanations">${feedbackHtml}</div>
                     </div>
                 `;
-            });
-            reviewContent.innerHTML = reviewHtml;
-        }
-
-        function restartQuiz() {
-             currentQuestionIndex = 0;
-             userAnswers.fill(null);
-             score = 0;
-             shuffledOptionsMap.clear(); // Clear shuffled options for a fresh start
-             
-             resultsContainer.classList.add('hidden');
-             reviewContainer.classList.add('hidden');
-             quizContainer.classList.remove('hidden');
-             navigationContainer.classList.remove('hidden');
-             mainHeader.classList.remove('hidden');
-             
-             loadQuestion();
-        }
-
-        // --- Event Listeners ---
-        prevBtn.addEventListener('click', () => {
-            if (currentQuestionIndex > 0) {
-                currentQuestionIndex--;
-                loadQuestion();
+                setTimeout(() => {
+                    const card = document.querySelector('.feedback-card');
+                    if(card) card.classList.add('show');
+                }, 10);
             }
-        });
 
-        nextBtn.addEventListener('click', () => {
-            if (userAnswers[currentQuestionIndex] === null) {
-                if (!quizData[currentQuestionIndex].type || quizData[currentQuestionIndex].type === 'MULTIPLE_CHOICE') {
-                    userAnswers[currentQuestionIndex] = ''; 
+            function updateProgress() {
+                const progressPercent = ((currentQuestionIndex + 1) / quizData.length) * 100;
+                progressBar.style.width = `${progressPercent}%`;
+                currentQSpan.textContent = currentQuestionIndex + 1;
+                totalQSpan.textContent = quizData.length;
+            }
+
+            function updateButtonStates() {
+                prevBtn.disabled = currentQuestionIndex === 0;
+                if (currentQuestionIndex === quizData.length - 1) {
+                    nextBtn.textContent = 'Finish Quiz';
                 } else {
-                     userAnswers[currentQuestionIndex] = []; // For checkbox if skipped
+                    nextBtn.textContent = 'Next';
                 }
             }
 
-            if (currentQuestionIndex < quizData.length - 1) {
-                currentQuestionIndex++;
-                loadQuestion();
-            } else {
-                showResults();
-            }
-        });
-        
-        restartBtn.addEventListener('click', restartQuiz);
-        reviewBtn.addEventListener('click', showReview);
-        backToScoreBtn.addEventListener('click', () => {
-            reviewContainer.classList.add('hidden');
-            resultsContainer.classList.remove('hidden');
-        });
+            function showResults() {
+                score = 0;
+                quizData.forEach((question, index) => {
+                    const userAnswer = userAnswers[index];
+                    if (question.type === 'CHECKBOX') {
+                        const correctAnswers = new Set(question.correctAnswers);
+                        const selectedAnswers = new Set(userAnswer || []);
+                        if (correctAnswers.size === selectedAnswers.size && [...correctAnswers].every(val => selectedAnswers.has(val))) {
+                            score++;
+                        }
+                    } else {
+                        if (userAnswer === question.correctAnswer) {
+                            score++;
+                        }
+                    }
+                });
 
-        // --- Initial Load ---
-        document.addEventListener('DOMContentLoaded', () => {
-            // Check if quizData is loaded
+                const percentage = Math.round((score / quizData.length) * 100);
+                scoreText.textContent = `${percentage}%`;
+                scoreSummary.textContent = `You answered ${score} out of ${quizData.length} questions correctly.`;
+
+                quizContainer.style.display = 'none';
+                navigationContainer.style.display = 'none';
+                mainHeader.style.display = 'none';
+                resultsContainer.classList.remove('hidden');
+                resultsContainer.style.display = 'block';
+
+            }
+
+            function showReview() {
+                resultsContainer.style.display = 'none';
+                reviewContainer.classList.remove('hidden');
+                reviewContainer.style.display = 'block';
+                
+                let reviewHtml = '';
+                quizData.forEach((question, index) => {
+                    const userAnswer = userAnswers[index];
+                    let isCorrect = false;
+                    let userAnswerHtml = '';
+                    let correctAnswerHtml = '';
+
+                    if (question.type === 'CHECKBOX') {
+                        const correctAnswers = new Set(question.correctAnswers);
+                        const selectedAnswers = new Set(userAnswer || []);
+                        isCorrect = correctAnswers.size === selectedAnswers.size && [...correctAnswers].every(val => selectedAnswers.has(val));
+                        userAnswerHtml = (userAnswer || []).length > 0 ? (userAnswer || []).map(a => `<li>${a}</li>`).join('') : '<li>No answer</li>';
+                        correctAnswerHtml = question.correctAnswers.map(a => `<li>${a}</li>`).join('');
+                    } else {
+                        isCorrect = userAnswer === question.correctAnswer;
+                        userAnswerHtml = `<li>${userAnswer || 'No answer'}</li>`;
+                        correctAnswerHtml = `<li>${question.correctAnswer}</li>`;
+                    }
+                    
+                    const resultIcon = isCorrect 
+                        ? `<span class="text-green-600 font-bold ml-2">✔ Correct</span>` 
+                        : `<span class="text-red-600 font-bold ml-2">✖ Incorrect</span>`;
+
+                    reviewHtml += `
+                        <div class="border-t border-slate-200 pt-4">
+                            <p class="font-semibold text-lg text-slate-800">${question.title}${resultIcon}</p>
+                            <p class="text-slate-600 mt-2">${question.description}</p>
+                            <div class="text-sm mt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <p class="font-bold mb-1 text-slate-500">Your Answer:</p>
+                                    <ul class="list-disc list-inside ${isCorrect ? 'review-answer-correct' : 'review-answer-incorrect'}">${userAnswerHtml}</ul>
+                                </div>
+                                ${!isCorrect ? `<div>
+                                    <p class="font-bold mb-1 text-slate-500">Correct Answer:</p>
+                                    <ul class="list-disc list-inside review-answer-correct">${correctAnswerHtml}</ul>
+                                </div>` : ''}
+                            </div>
+                        </div>
+                    `;
+                });
+                reviewContent.innerHTML = reviewHtml;
+            }
+
+            function restartQuiz() {
+                currentQuestionIndex = 0;
+                userAnswers.fill(null);
+                score = 0;
+                shuffledOptionsMap.clear();
+                
+                resultsContainer.style.display = 'none';
+                reviewContainer.style.display = 'none';
+                quizContainer.style.display = 'block';
+                navigationContainer.style.display = 'flex';
+                mainHeader.style.display = 'block';
+                
+                loadQuestion();
+            }
+
+            // --- Event Listeners ---
+            prevBtn.addEventListener('click', () => {
+                if (currentQuestionIndex > 0) {
+                    currentQuestionIndex--;
+                    loadQuestion();
+                }
+            });
+
+            nextBtn.addEventListener('click', () => {
+                if (userAnswers[currentQuestionIndex] === null) {
+                    if (!quizData[currentQuestionIndex].type || quizData[currentQuestionIndex].type === 'MULTIPLE_CHOICE') {
+                        userAnswers[currentQuestionIndex] = ''; 
+                    } else {
+                        userAnswers[currentQuestionIndex] = [];
+                    }
+                }
+
+                if (currentQuestionIndex < quizData.length - 1) {
+                    currentQuestionIndex++;
+                    loadQuestion();
+                } else {
+                    showResults();
+                }
+            });
+            
+            restartBtn.addEventListener('click', restartQuiz);
+            reviewBtn.addEventListener('click', showReview);
+            backToScoreBtn.addEventListener('click', () => {
+                reviewContainer.style.display = 'none';
+                resultsContainer.style.display = 'block';
+            });
+
+            // --- Initial Load ---
             if (typeof quizData === 'undefined') {
-                quizContainer.innerHTML = `<p class="text-red-500 font-bold text-center">Error: Could not load questions.</p>`;
+                quizContainer.innerHTML = `<p class="text-red-500 font-bold text-center">Error: Could not load questions. Make sure quizData.js is loaded correctly.</p>`;
                 return;
             }
             loadQuestion();
